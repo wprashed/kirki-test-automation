@@ -1,0 +1,11 @@
+15:15:20 INFO    kirki-ecom-tests: STEP | WP admin login as admin
+15:15:23 INFO    kirki-ecom-tests: STEP | admin SPA mounted and ready
+15:15:23 INFO    kirki-ecom-tests: STEP | app-config fetched: version='1.0.0-alpha.3'
+15:15:24 INFO    kirki-ecom-tests: STEP | advance.pages = {'shop': 4640, 'cart': 4641, 'checkout': 4642, 'account': 4643, 'login': 4644, 'register': 4645}
+15:15:24 INFO    kirki-ecom-tests: STEP | checkout.is_allowed_guest_checkout = False
+15:15:24 INFO    kirki-ecom-tests: STEP | offline payments configured: ['cod']
+15:15:24 DEBUG   kirki-ecom-tests: created product id=4 'KECOM_TEST Smoke a8d01f'
+15:15:24 INFO    kirki-ecom-tests: STEP | smoke product created: id=4 'KECOM_TEST Smoke a8d01f'
+15:15:24 INFO    kirki-ecom-tests: STEP | product verified: price=4999 cents stock=10
+15:15:25 DEBUG   kirki-ecom-tests: cleaning test data with prefix 'KECOM_TEST'
+15:15:25 WARNING kirki-ecom-tests: cleanup_test_data failed (continuing): pymysql is required for database helpers. Add it to requirements.txt.

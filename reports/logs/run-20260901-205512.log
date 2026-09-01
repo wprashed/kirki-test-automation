@@ -1,0 +1,17 @@
+20:55:13 DEBUG   kirki-ecom-tests: created product id=132 'Admin Test T-Shirt'
+20:55:13 INFO    kirki-ecom-tests: STEP | created admin product id=132
+20:55:13 INFO    kirki-ecom-tests: STEP | deleted product id=132
+20:55:14 INFO    kirki-ecom-tests: STEP | fetched products response via REST: <class 'dict'>
+20:55:14 INFO    kirki-ecom-tests: STEP | fetched sales analytics report: <Response [404]>
+20:55:15 INFO    kirki-ecom-tests: STEP | fetched top sellers report: <Response [404]>
+20:55:16 INFO    kirki-ecom-tests: STEP | fetched customer analytics: <Response [404]>
+20:55:16 INFO    kirki-ecom-tests: STEP | fetched general store settings via REST
+20:55:17 INFO    kirki-ecom-tests: STEP | fetched shipping profiles: <Response [200]>
+20:55:18 INFO    kirki-ecom-tests: STEP | fetched shipping boxes: <Response [200]>
+20:55:18 INFO    kirki-ecom-tests: STEP | product duplication tested: POST /products -> 422 (expected 201): {"message":"Validation failed!","errors":{"variants":["The variants field is required.","The field variants must be an array."]},"success":false}
+20:55:19 INFO    kirki-ecom-tests: STEP | fetched product tags: <Response [200]>
+20:55:20 INFO    kirki-ecom-tests: STEP | fetched collections: <Response [200]>
+20:55:20 INFO    kirki-ecom-tests: STEP | stock update operation checked: POST /products -> 422 (expected 201): {"message":"Validation failed!","errors":{"variants":["The variants field is required.","The field variants must be an array."]},"success":false}
+20:55:21 INFO    kirki-ecom-tests: STEP | fetched low stock alerts: <Response [404]>
+20:55:22 INFO    kirki-ecom-tests: STEP | fetched currencies: <Response [200]>
+20:55:22 INFO    kirki-ecom-tests: STEP | fetched tax profiles: <Response [200]>

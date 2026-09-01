@@ -1,0 +1,36 @@
+17:44:22 INFO    kirki-ecom-tests: STEP | WP admin login as admin
+17:44:24 INFO    kirki-ecom-tests: STEP | admin SPA mounted and ready
+17:44:24 INFO    kirki-ecom-tests: STEP | app-config fetched: version='1.0.0-alpha.3'
+17:44:25 INFO    kirki-ecom-tests: STEP | advance.pages = {'shop': 4640, 'cart': 4641, 'checkout': 4642, 'account': 4643, 'login': 4644, 'register': 4645}
+17:44:25 INFO    kirki-ecom-tests: STEP | checkout.is_allowed_guest_checkout = True
+17:44:25 INFO    kirki-ecom-tests: STEP | offline payments configured: ['cod']
+17:44:25 DEBUG   kirki-ecom-tests: created product id=94 'KECOM_TEST Smoke a5c973'
+17:44:25 INFO    kirki-ecom-tests: STEP | smoke product created: id=94 'KECOM_TEST Smoke a5c973'
+17:44:25 INFO    kirki-ecom-tests: STEP | product verified: price=4999 cents stock=10
+17:44:26 INFO    kirki-ecom-tests: STEP | shop card found: KECOM_TEST Smoke a5c973 @ 4999 cents
+17:44:27 INFO    kirki-ecom-tests: STEP | search shop for 'KECOM_TEST Smoke a5c973'
+17:44:28 INFO    kirki-ecom-tests: STEP | search returned card: KECOM_TEST Smoke a5c973
+17:44:29 INFO    kirki-ecom-tests: STEP | product detail OK: KECOM_TEST Smoke a5c973
+17:44:30 INFO    kirki-ecom-tests: STEP | click Add to Cart on product page
+17:44:30 INFO    kirki-ecom-tests: STEP | cart token: 1a596711-ad2...
+17:44:30 INFO    kirki-ecom-tests: STEP | cart via REST: 1 item(s)
+17:44:32 INFO    kirki-ecom-tests: STEP | cart subtotal = 4999 cents
+17:44:34 INFO    kirki-ecom-tests: STEP | cart subtotal after qty=2 = 9998 cents
+17:44:34 INFO    kirki-ecom-tests: STEP | REST cart quantity = 2
+17:44:36 INFO    kirki-ecom-tests: STEP | fill contact email KECOM_TEST_smoke_9a65c9e2@example.com
+17:44:36 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
+17:44:36 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True
+17:44:36 INFO    kirki-ecom-tests: STEP | select payment method cod
+17:44:36 INFO    kirki-ecom-tests: STEP | checkout totals: subtotal=9998 shipping=0 total=9998
+17:44:36 INFO    kirki-ecom-tests: STEP | click Place Order
+17:44:37 INFO    kirki-ecom-tests: STEP | order created via REST: id=16 number=ORD-6A96BAA5323C3
+17:44:38 INFO    kirki-ecom-tests: STEP | order success: invoice ORD-6A96BAA5323C3
+17:44:39 INFO    kirki-ecom-tests: STEP | order verified: total=99.98 cents status=None payment=unpaid
+17:44:40 INFO    kirki-ecom-tests: STEP | WP admin login as admin
+17:44:56 INFO    kirki-ecom-tests: STEP | admin order detail OK: ORD-6A96BAA5323C3
+17:44:57 INFO    kirki-ecom-tests: STEP | WP admin login as admin
+17:45:14 INFO    kirki-ecom-tests: STEP | customer order details verified: ORD-6A96BAA5323C3
+17:45:15 INFO    kirki-ecom-tests: STEP | logged out successfully
+17:45:15 INFO    kirki-ecom-tests: STEP | customer logged out
+17:45:15 DEBUG   kirki-ecom-tests: cleaning test data with prefix 'KECOM_TEST'
+17:45:15 WARNING kirki-ecom-tests: cleanup_test_data failed (continuing): (1146, "Table 'local.kirki_ecommerce_products' doesn't exist")

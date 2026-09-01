@@ -1,0 +1,10 @@
+17:40:57 DEBUG   kirki-ecom-tests: created product id=92 'KECOM_TEST_Smoke Product_9f5f3dad3c'
+17:40:59 INFO    kirki-ecom-tests: STEP | fill contact email KECOM_TEST_smoke_2fcc5130@example.com
+17:40:59 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
+17:40:59 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True
+17:40:59 INFO    kirki-ecom-tests: STEP | select payment method cod
+17:40:59 INFO    kirki-ecom-tests: STEP | checkout totals: subtotal=4999 shipping=0 total=4999
+17:40:59 INFO    kirki-ecom-tests: STEP | click Place Order
+17:41:00 INFO    kirki-ecom-tests: STEP | order created via REST: id=14 number=ORD-6A96B9CC134F0
+17:41:01 INFO    kirki-ecom-tests: STEP | order success: invoice ORD-6A96B9CC134F0
+17:41:02 INFO    kirki-ecom-tests: STEP | order verified: total=49.99 cents status=None payment=unpaid

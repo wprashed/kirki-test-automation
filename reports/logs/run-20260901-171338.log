@@ -1,0 +1,5 @@
+17:13:39 DEBUG   kirki-ecom-tests: created product id=56 'PlaceOrder Inspect 2'
+17:13:40 INFO    kirki-ecom-tests: STEP | fill contact email test_order@example.com
+17:13:40 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
+17:13:40 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True
+17:13:40 INFO    kirki-ecom-tests: STEP | select payment method cod

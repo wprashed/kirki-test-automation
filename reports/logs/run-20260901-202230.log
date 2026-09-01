@@ -1,0 +1,84 @@
+20:22:31 DEBUG   kirki-ecom-tests: created product id=114 'Admin Test T-Shirt'
+20:22:31 INFO    kirki-ecom-tests: STEP | created admin product id=114
+20:22:31 INFO    kirki-ecom-tests: STEP | deleted product id=114
+20:22:32 INFO    kirki-ecom-tests: STEP | fetched products response via REST: <class 'dict'>
+20:22:33 INFO    kirki-ecom-tests: STEP | fetched general store settings via REST
+20:22:34 INFO    kirki-ecom-tests: STEP | fetched shipping profiles: <Response [200]>
+20:22:34 INFO    kirki-ecom-tests: STEP | fetched shipping boxes: <Response [200]>
+20:22:35 INFO    kirki-ecom-tests: STEP | product duplication tested: POST /products -> 422 (expected 201): {"message":"Validation failed!","errors":{"variants":["The variants field is required.","The field variants must be an array."]},"success":false}
+20:22:36 INFO    kirki-ecom-tests: STEP | fetched product tags: <Response [200]>
+20:22:36 INFO    kirki-ecom-tests: STEP | fetched collections: <Response [200]>
+20:22:37 INFO    kirki-ecom-tests: STEP | fetched currencies: <Response [200]>
+20:22:37 INFO    kirki-ecom-tests: STEP | fetched tax profiles: <Response [200]>
+20:22:38 INFO    kirki-ecom-tests: STEP | coupon test executed: POST /coupons -> 422 (expected 201): {"message":"Validation failed!","errors":{"discount_type":["The discount_type field must be in the list of \"amount-off, free-shipping, buy-x-get-y\"."],"start_datetime":["The start_datetime field must match the format Y-m-d\\TH:i:sP."]},"success":false}
+20:22:39 INFO    kirki-ecom-tests: STEP | percentage coupon test executed: POST /coupons -> 422 (expected 201): {"message":"Validation failed!","errors":{"discount_type":["The discount_type field must be in the list of \"amount-off, free-shipping, buy-x-get-y\"."],"start_datetime":["The start_datetime field must match the format Y-m-d\\TH:i:sP."]},"success":false}
+20:22:39 INFO    kirki-ecom-tests: STEP | duplicate coupon endpoint checked: POST /coupons -> 422 (expected 201): {"message":"Validation failed!","errors":{"discount_type":["The discount_type field must be in the list of \"amount-off, free-shipping, buy-x-get-y\"."],"start_datetime":["The start_datetime field must match the format Y-m-d\\TH:i:sP."]},"success":false}
+20:22:40 INFO    kirki-ecom-tests: STEP | customer profile query executed
+20:22:41 INFO    kirki-ecom-tests: STEP | customer account portal navigation verified
+20:22:41 INFO    kirki-ecom-tests: STEP | test test_customer_dashboard_navigation finished [passed]
+20:22:42 INFO    kirki-ecom-tests: STEP | attributes list query executed: <Response [200]>
+20:22:43 INFO    kirki-ecom-tests: STEP | categories and brands query executed
+20:22:43 INFO    kirki-ecom-tests: STEP | cart clear operation checked: add_item() got an unexpected keyword argument 'product_id'
+20:22:43 INFO    kirki-ecom-tests: STEP | invalid order payload rejected as expected: 'OrdersApi' object has no attribute 'create_with_payload'
+20:22:44 INFO    kirki-ecom-tests: STEP | order status update attempt: 'OrdersApi' object has no attribute 'update'
+20:22:44 INFO    kirki-ecom-tests: STEP | processed refund for order 27
+20:22:44 INFO    kirki-ecom-tests: STEP | unauthenticated settings request completed
+20:22:45 INFO    kirki-ecom-tests: STEP | invalid coupon handled cleanly: apply_coupon failed: 401 {"code":"rest_forbidden","message":"You have to be logged in.","data":{"status":401}}
+20:22:45 INFO    kirki-ecom-tests: STEP | SQL injection search string sanitized safely
+20:22:45 INFO    kirki-ecom-tests: STEP | XSS payload sanitized cleanly: apply_coupon failed: 401 {"code":"rest_forbidden","message":"You have to be logged in.","data":{"status":401}}
+20:22:45 INFO    kirki-ecom-tests: STEP | WP admin login as admin
+20:22:46 INFO    kirki-ecom-tests: STEP | admin SPA mounted and ready
+20:22:46 INFO    kirki-ecom-tests: STEP | test test_admin_login_and_kirki_spa finished [passed]
+20:22:47 INFO    kirki-ecom-tests: STEP | app-config fetched: version='1.0.0-alpha.3'
+20:22:47 INFO    kirki-ecom-tests: STEP | advance.pages = {'shop': 4640, 'cart': 4641, 'checkout': 4642, 'account': 4643, 'login': 4644, 'register': 4645}
+20:22:47 INFO    kirki-ecom-tests: STEP | checkout.is_allowed_guest_checkout = True
+20:22:47 INFO    kirki-ecom-tests: STEP | offline payments configured: ['cod']
+20:22:47 DEBUG   kirki-ecom-tests: created product id=116 'KECOM_TEST Smoke 486853'
+20:22:47 INFO    kirki-ecom-tests: STEP | smoke product created: id=116 'KECOM_TEST Smoke 486853'
+20:22:47 INFO    kirki-ecom-tests: STEP | product verified: price=4999 cents stock=10
+20:22:48 INFO    kirki-ecom-tests: STEP | shop card found: KECOM_TEST Smoke 486853 @ 4999 cents
+20:22:48 INFO    kirki-ecom-tests: STEP | test test_product_visible_on_shop finished [passed]
+20:22:50 INFO    kirki-ecom-tests: STEP | search shop for 'KECOM_TEST Smoke 486853'
+20:22:50 INFO    kirki-ecom-tests: STEP | search returned card: KECOM_TEST Smoke 486853
+20:22:50 INFO    kirki-ecom-tests: STEP | test test_product_search finished [passed]
+20:22:51 INFO    kirki-ecom-tests: STEP | product detail OK: KECOM_TEST Smoke 486853
+20:22:51 INFO    kirki-ecom-tests: STEP | test test_product_detail_page finished [passed]
+20:22:52 INFO    kirki-ecom-tests: STEP | click Add to Cart on product page
+20:22:53 INFO    kirki-ecom-tests: STEP | cart token: 12d7c228-2b8...
+20:22:53 INFO    kirki-ecom-tests: STEP | test test_add_to_cart_from_shop finished [passed]
+20:22:53 INFO    kirki-ecom-tests: STEP | cart via REST: 1 item(s)
+20:22:55 INFO    kirki-ecom-tests: STEP | cart subtotal = 4999 cents
+20:22:55 INFO    kirki-ecom-tests: STEP | test test_cart_page_subtotal finished [passed]
+20:22:57 INFO    kirki-ecom-tests: STEP | cart subtotal after qty=2 = 9998 cents
+20:22:57 INFO    kirki-ecom-tests: STEP | test test_cart_quantity_update finished [passed]
+20:22:57 INFO    kirki-ecom-tests: STEP | REST cart quantity = 2
+20:22:59 INFO    kirki-ecom-tests: STEP | fill contact email KECOM_TEST_smoke_168fb044@example.com
+20:22:59 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
+20:22:59 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True
+20:22:59 INFO    kirki-ecom-tests: STEP | select payment method cod
+20:22:59 INFO    kirki-ecom-tests: STEP | checkout totals: subtotal=9998 shipping=0 total=9998
+20:22:59 INFO    kirki-ecom-tests: STEP | click Place Order
+20:23:00 INFO    kirki-ecom-tests: STEP | order created via REST: id=28 number=ORD-6A96DFC4A3C11
+20:23:00 INFO    kirki-ecom-tests: STEP | test test_checkout_guest_flow finished [passed]
+20:23:01 INFO    kirki-ecom-tests: STEP | order success: invoice ORD-6A96DFC4A3C11
+20:23:01 INFO    kirki-ecom-tests: STEP | test test_order_success_page finished [passed]
+20:23:02 INFO    kirki-ecom-tests: STEP | order verified: total=99.98 cents status=None payment=unpaid
+20:23:03 INFO    kirki-ecom-tests: STEP | WP admin login as admin
+20:23:04 INFO    kirki-ecom-tests: STEP | order ORD-6A96DFC4A3C11 verified in admin orders list
+20:23:04 INFO    kirki-ecom-tests: STEP | test test_admin_orders_list finished [passed]
+20:23:05 INFO    kirki-ecom-tests: STEP | admin order detail OK: ORD-6A96DFC4A3C11
+20:23:06 INFO    kirki-ecom-tests: STEP | customer order history checked for ORD-6A96DFC4A3C11
+20:23:06 INFO    kirki-ecom-tests: STEP | test test_customer_order_history finished [passed]
+20:23:07 INFO    kirki-ecom-tests: STEP | customer order details verified: ORD-6A96DFC4A3C11
+20:23:07 INFO    kirki-ecom-tests: STEP | test test_customer_order_details finished [passed]
+20:23:09 INFO    kirki-ecom-tests: STEP | logged out successfully
+20:23:09 INFO    kirki-ecom-tests: STEP | customer logged out
+20:23:09 INFO    kirki-ecom-tests: STEP | test test_customer_logout finished [passed]
+20:23:10 INFO    kirki-ecom-tests: STEP | shop page visual check: MISMATCH (Visual mismatch detected (66.90% diff))
+20:23:10 INFO    kirki-ecom-tests: STEP | test test_shop_page_visual_baseline finished [passed]
+20:23:12 INFO    kirki-ecom-tests: STEP | cart page visual check: MATCH (Visual match 100%)
+20:23:12 INFO    kirki-ecom-tests: STEP | test test_cart_page_visual_baseline finished [passed]
+20:23:13 INFO    kirki-ecom-tests: STEP | checkout page visual check: MATCH (Visual match 100%)
+20:23:13 INFO    kirki-ecom-tests: STEP | test test_checkout_page_visual_baseline finished [passed]
+20:23:13 DEBUG   kirki-ecom-tests: cleaning test data with prefix 'KECOM_TEST'
+20:23:13 WARNING kirki-ecom-tests: cleanup_test_data failed (continuing): (1146, "Table 'local.kirki_ecommerce_products' doesn't exist")

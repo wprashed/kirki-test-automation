@@ -1,0 +1,13 @@
+17:04:40 DEBUG   kirki-ecom-tests: created product id=29 'KECOM_TEST Smoke 347a5f'
+17:04:40 INFO    kirki-ecom-tests: STEP | smoke product created: id=29 'KECOM_TEST Smoke 347a5f'
+17:04:40 INFO    kirki-ecom-tests: STEP | product verified: price=4999 cents stock=10
+17:04:41 INFO    kirki-ecom-tests: STEP | shop card found: KECOM_TEST Smoke 347a5f @ 4999 cents
+17:04:42 INFO    kirki-ecom-tests: STEP | search shop for 'KECOM_TEST Smoke 347a5f'
+17:04:43 INFO    kirki-ecom-tests: STEP | search returned card: KECOM_TEST Smoke 347a5f
+17:04:44 INFO    kirki-ecom-tests: STEP | product detail OK: KECOM_TEST Smoke 347a5f
+17:04:45 INFO    kirki-ecom-tests: STEP | click Add to Cart on product page
+17:04:46 INFO    kirki-ecom-tests: STEP | cart token: ebd6f919-857...
+17:04:46 INFO    kirki-ecom-tests: STEP | cart via REST: 1 item(s)
+17:04:47 INFO    kirki-ecom-tests: STEP | cart subtotal = 4999 cents
+17:04:50 INFO    kirki-ecom-tests: STEP | cart subtotal after qty=2 = 9998 cents
+17:04:50 INFO    kirki-ecom-tests: STEP | REST cart quantity = 2

@@ -1,0 +1,4 @@
+17:16:48 DEBUG   kirki-ecom-tests: created product id=66 'Dispatch Change Test'
+17:16:49 INFO    kirki-ecom-tests: STEP | fill contact email test_change@example.com
+17:16:49 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
+17:16:50 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True

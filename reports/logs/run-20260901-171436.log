@@ -1,0 +1,19 @@
+17:14:37 DEBUG   kirki-ecom-tests: created product id=60 'KECOM_TEST Smoke 0e1327'
+17:14:37 INFO    kirki-ecom-tests: STEP | smoke product created: id=60 'KECOM_TEST Smoke 0e1327'
+17:14:37 INFO    kirki-ecom-tests: STEP | product verified: price=4999 cents stock=10
+17:14:38 INFO    kirki-ecom-tests: STEP | shop card found: KECOM_TEST Smoke 0e1327 @ 4999 cents
+17:14:39 INFO    kirki-ecom-tests: STEP | search shop for 'KECOM_TEST Smoke 0e1327'
+17:14:40 INFO    kirki-ecom-tests: STEP | search returned card: KECOM_TEST Smoke 0e1327
+17:14:41 INFO    kirki-ecom-tests: STEP | product detail OK: KECOM_TEST Smoke 0e1327
+17:14:42 INFO    kirki-ecom-tests: STEP | click Add to Cart on product page
+17:14:42 INFO    kirki-ecom-tests: STEP | cart token: 0e07c4a7-ad5...
+17:14:43 INFO    kirki-ecom-tests: STEP | cart via REST: 1 item(s)
+17:14:44 INFO    kirki-ecom-tests: STEP | cart subtotal = 4999 cents
+17:14:46 INFO    kirki-ecom-tests: STEP | cart subtotal after qty=2 = 9998 cents
+17:14:47 INFO    kirki-ecom-tests: STEP | REST cart quantity = 2
+17:14:48 INFO    kirki-ecom-tests: STEP | fill contact email KECOM_TEST_smoke_11811afb@example.com
+17:14:48 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
+17:14:48 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True
+17:14:48 INFO    kirki-ecom-tests: STEP | select payment method cod
+17:14:49 INFO    kirki-ecom-tests: STEP | checkout totals: subtotal=9998 shipping=0 total=9998
+17:14:49 INFO    kirki-ecom-tests: STEP | click Place Order

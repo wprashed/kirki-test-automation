@@ -1,0 +1,19 @@
+17:10:15 DEBUG   kirki-ecom-tests: created product id=44 'KECOM_TEST Smoke 07a23c'
+17:10:15 INFO    kirki-ecom-tests: STEP | smoke product created: id=44 'KECOM_TEST Smoke 07a23c'
+17:10:15 INFO    kirki-ecom-tests: STEP | product verified: price=4999 cents stock=10
+17:10:16 INFO    kirki-ecom-tests: STEP | shop card found: KECOM_TEST Smoke 07a23c @ 4999 cents
+17:10:17 INFO    kirki-ecom-tests: STEP | search shop for 'KECOM_TEST Smoke 07a23c'
+17:10:18 INFO    kirki-ecom-tests: STEP | search returned card: KECOM_TEST Smoke 07a23c
+17:10:19 INFO    kirki-ecom-tests: STEP | product detail OK: KECOM_TEST Smoke 07a23c
+17:10:20 INFO    kirki-ecom-tests: STEP | click Add to Cart on product page
+17:10:20 INFO    kirki-ecom-tests: STEP | cart token: cfde43d8-dee...
+17:10:20 INFO    kirki-ecom-tests: STEP | cart via REST: 1 item(s)
+17:10:22 INFO    kirki-ecom-tests: STEP | cart subtotal = 4999 cents
+17:10:24 INFO    kirki-ecom-tests: STEP | cart subtotal after qty=2 = 9998 cents
+17:10:24 INFO    kirki-ecom-tests: STEP | REST cart quantity = 2
+17:10:26 INFO    kirki-ecom-tests: STEP | fill contact email KECOM_TEST_smoke_79d83abe@example.com
+17:10:26 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
+17:10:26 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True
+17:11:24 INFO    kirki-ecom-tests: STEP | login as KECOM_TEST_smoke_79d83abe@example.com
+17:12:12 DEBUG   kirki-ecom-tests: cleaning test data with prefix 'KECOM_TEST'
+17:12:12 WARNING kirki-ecom-tests: cleanup_test_data failed (continuing): (1146, "Table 'local.kirki_ecommerce_products' doesn't exist")

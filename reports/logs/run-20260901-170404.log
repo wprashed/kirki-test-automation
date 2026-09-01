@@ -1,0 +1,19 @@
+17:04:05 INFO    kirki-ecom-tests: STEP | WP admin login as admin
+17:04:07 INFO    kirki-ecom-tests: STEP | admin SPA mounted and ready
+17:04:07 INFO    kirki-ecom-tests: STEP | app-config fetched: version='1.0.0-alpha.3'
+17:04:07 INFO    kirki-ecom-tests: STEP | advance.pages = {'shop': 4640, 'cart': 4641, 'checkout': 4642, 'account': 4643, 'login': 4644, 'register': 4645}
+17:04:07 INFO    kirki-ecom-tests: STEP | checkout.is_allowed_guest_checkout = False
+17:04:07 INFO    kirki-ecom-tests: STEP | offline payments configured: ['cod']
+17:04:08 DEBUG   kirki-ecom-tests: created product id=28 'KECOM_TEST Smoke 600321'
+17:04:08 INFO    kirki-ecom-tests: STEP | smoke product created: id=28 'KECOM_TEST Smoke 600321'
+17:04:08 INFO    kirki-ecom-tests: STEP | product verified: price=4999 cents stock=10
+17:04:09 INFO    kirki-ecom-tests: STEP | shop card found: KECOM_TEST Smoke 600321 @ 4999 cents
+17:04:10 INFO    kirki-ecom-tests: STEP | search shop for 'KECOM_TEST Smoke 600321'
+17:04:11 INFO    kirki-ecom-tests: STEP | search returned card: KECOM_TEST Smoke 600321
+17:04:12 INFO    kirki-ecom-tests: STEP | product detail OK: KECOM_TEST Smoke 600321
+17:04:13 INFO    kirki-ecom-tests: STEP | click Add to Cart on product page
+17:04:13 INFO    kirki-ecom-tests: STEP | cart token: 2bf0be52-db4...
+17:04:13 INFO    kirki-ecom-tests: STEP | cart via REST: 1 item(s)
+17:04:15 INFO    kirki-ecom-tests: STEP | cart subtotal = 4999 cents
+17:04:17 INFO    kirki-ecom-tests: STEP | cart subtotal after qty=2 = 9998 cents
+17:04:17 INFO    kirki-ecom-tests: STEP | REST cart quantity = 2

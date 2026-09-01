@@ -1,0 +1,3 @@
+17:41:06 INFO    kirki-ecom-tests: STEP | WP admin login as admin
+17:41:07 INFO    kirki-ecom-tests: STEP | order  visible in admin
+17:41:10 INFO    kirki-ecom-tests: STEP | login as KECOM_TEST_smoke_9bfc09d9@example.com
