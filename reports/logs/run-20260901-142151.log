@@ -1,6 +1,0 @@
-14:21:52 INFO    kirki-ecom-tests: STEP | WP admin login as admin
-14:21:53 INFO    kirki-ecom-tests: STEP | admin SPA mounted and ready
-14:21:54 INFO    kirki-ecom-tests: STEP | app-config fetched: version='1.0.0-alpha.3'
-14:21:54 INFO    kirki-ecom-tests: STEP | advance.pages = {'shop': 4640, 'cart': 4641, 'checkout': 4642, 'account': 4643, 'login': 4644, 'register': 4645}
-14:21:54 INFO    kirki-ecom-tests: STEP | checkout.is_allowed_guest_checkout = False
-14:21:54 INFO    kirki-ecom-tests: STEP | offline payments configured: ['cod']

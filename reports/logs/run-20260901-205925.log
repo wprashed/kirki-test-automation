@@ -1,6 +1,0 @@
-20:59:26 INFO    kirki-ecom-tests: STEP | browser session started — window will stay open until all tests finish
-20:59:26 INFO    kirki-ecom-tests: STEP | WP admin login as admin
-20:59:26 INFO    kirki-ecom-tests: STEP | Clicked element on page
-20:59:28 INFO    kirki-ecom-tests: STEP | admin SPA mounted and ready
-20:59:28 INFO    kirki-ecom-tests: STEP | test test_admin_login_and_kirki_spa finished [passed]
-20:59:28 INFO    kirki-ecom-tests: STEP | all tests finished — closing browser session

@@ -1,6 +1,0 @@
-17:13:58 DEBUG   kirki-ecom-tests: created product id=58 'Phone Required Test'
-17:14:00 INFO    kirki-ecom-tests: STEP | fill contact email test_phone@example.com
-17:14:00 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
-17:14:00 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True
-17:14:00 INFO    kirki-ecom-tests: STEP | select payment method cod
-17:14:01 INFO    kirki-ecom-tests: STEP | click Place Order
