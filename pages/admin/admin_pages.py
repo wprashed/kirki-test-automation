@@ -23,9 +23,45 @@ class AdminLoginPage(BasePage):
 
     def login(self, username: str, password: str) -> None:
         log_step(f"WP admin login as {username}")
-        self.find(*self.USER_LOGIN).send_keys(username)
-        self.find(*self.USER_PASS).send_keys(password)
-        self.click(self.find(*self.SUBMIT))
+        if "wp-login.php" not in self.driver.current_url:
+            self.driver.get(self.base_url + "/wp-login.php")
+        try:
+            self.driver.add_cookie({"name": "wordpress_test_cookie", "value": "WP Cookie check"})
+        except Exception:
+            pass
+
+        u = self.find(*self.USER_LOGIN)
+        u.clear()
+        u.send_keys(username)
+        p = self.find(*self.USER_PASS)
+        p.clear()
+        p.send_keys(password)
+
+        try:
+            rem = self.driver.find_element(By.ID, "rememberme")
+            if not rem.is_selected():
+                rem.click()
+        except Exception:
+            pass
+
+        sub = self.find(*self.SUBMIT)
+        self.click(sub)
+
+        from selenium.webdriver.support.ui import WebDriverWait
+        try:
+            WebDriverWait(self.driver, 10).until(lambda d: "wp-login.php" not in d.current_url)
+        except Exception:
+            try:
+                self.driver.execute_script("document.getElementById('loginform').submit();")
+                WebDriverWait(self.driver, 10).until(lambda d: "wp-login.php" not in d.current_url)
+            except Exception:
+                pass
+
+    def login_as_admin(self) -> "AdminDashboardPage":
+        from utils.config import settings
+        self.open_admin_login()
+        self.login(settings.admin_user, settings.admin_password)
+        return AdminDashboardPage(self.driver).wait_for_dashboard()
 
     def error_text(self) -> str:
         if self.exists(*self.ERROR, timeout=1):
@@ -51,6 +87,9 @@ class AdminDashboardPage(BasePage):
     def open_kirki(self) -> "AdminDashboardPage":
         """Open the Kirki eCommerce admin SPA."""
         self.open("wp-admin/admin.php?page=kirki-ecommerce")
+        if "wp-login" in self.driver.current_url:
+            AdminLoginPage(self.driver).login_as_admin()
+            self.open("wp-admin/admin.php?page=kirki-ecommerce")
         return self.wait_for_dashboard()
 
     def is_kirki_spa_loaded(self) -> bool:

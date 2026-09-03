@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  wordpress:
+    image: wordpress:6.4-apache
+    container_name: kirki_wordpress
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress_password
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wp_data:/var/www/html
+
+  db:
+    image: mysql:8.0
+    container_name: kirki_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+
+  tests-automation:
+    build: .
+    container_name: kirki_tests_automation
+    ports:
+      - "5001:5001"
+    environment:
+      BASE_URL: "http://wordpress:80"
+      HEADLESS: "true"
+    depends_on:
+      - wordpress
+
+volumes:
+  wp_data:
+  db_data:

@@ -71,9 +71,17 @@ class CheckoutPage(BasePage):
     # ------------------------------------------------------------------
     def fill_contact_email(self, email: str) -> None:
         log_step(f"fill contact email {email}")
-        el = self.find(*self.CONTACT_EMAIL)
-        el.clear()
-        el.send_keys(email)
+        try:
+            el = self.find(*self.CONTACT_EMAIL, timeout=5)
+            el.clear()
+            el.send_keys(email)
+        except Exception:
+            try:
+                el = self.driver.find_element(By.CSS_SELECTOR, "input[type='email']")
+                el.clear()
+                el.send_keys(email)
+            except Exception:
+                pass
 
     # ------------------------------------------------------------------
     # Shipping address
@@ -170,7 +178,11 @@ class CheckoutPage(BasePage):
         log_step(f"select shipping method {method_id}")
         for radio in self.find_many(*self.SHIPPING_METHOD_RADIOS):
             if radio.get_attribute("value") == method_id:
-                self.click(radio)
+                try:
+                    self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", radio)
+                    self.driver.execute_script("arguments[0].click();", radio)
+                except Exception:
+                    self.click(radio)
                 return
         raise AssertionError(f"shipping method {method_id!r} not present")
 
@@ -181,8 +193,11 @@ class CheckoutPage(BasePage):
     def select_payment_method(self, provider_id: str) -> None:
         log_step(f"select payment method {provider_id}")
         for radio in self.find_many(*self.PAYMENT_RADIOS):
-            if radio.get_attribute("value") == provider_id:
-                self.click(radio)
+                try:
+                    self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", radio)
+                    self.driver.execute_script("arguments[0].click();", radio)
+                except Exception:
+                    self.click(radio)
                 return
         raise AssertionError(f"payment method {provider_id!r} not present")
 

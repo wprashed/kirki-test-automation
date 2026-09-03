@@ -142,3 +142,40 @@
 21:05:05 INFO    kirki-ecom-tests: STEP | cart via REST: 1 item(s)
 21:05:06 INFO    kirki-ecom-tests: STEP | cart subtotal = 4999 cents
 21:05:06 INFO    kirki-ecom-tests: STEP | test test_cart_page_subtotal finished [passed]
+21:05:07 INFO    kirki-ecom-tests: STEP | cart subtotal after qty=2 = 9998 cents
+21:05:07 INFO    kirki-ecom-tests: STEP | test test_cart_quantity_update finished [passed]
+21:05:07 INFO    kirki-ecom-tests: STEP | REST cart quantity = 2
+21:05:08 INFO    kirki-ecom-tests: STEP | fill contact email KECOM_TEST_smoke_5ac850a4@example.com
+21:05:08 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
+21:05:08 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True
+21:05:08 INFO    kirki-ecom-tests: STEP | select payment method cod
+21:05:08 INFO    kirki-ecom-tests: STEP | Clicked element on page
+21:05:08 INFO    kirki-ecom-tests: STEP | checkout totals: subtotal=9998 shipping=0 total=9998
+21:05:08 INFO    kirki-ecom-tests: STEP | click Place Order
+21:05:08 INFO    kirki-ecom-tests: STEP | Clicked element on page
+21:05:09 INFO    kirki-ecom-tests: STEP | order created via REST: id=36 number=ORD-6A96E9A589874
+21:05:09 INFO    kirki-ecom-tests: STEP | test test_checkout_guest_flow finished [passed]
+21:05:09 INFO    kirki-ecom-tests: STEP | order success page verified for: ORD-6A96E9A589874
+21:05:09 INFO    kirki-ecom-tests: STEP | test test_order_success_page finished [passed]
+21:05:10 INFO    kirki-ecom-tests: STEP | order verified: total=99.98 cents status=None payment=unpaid
+21:05:10 INFO    kirki-ecom-tests: STEP | WP admin login as admin
+21:05:10 INFO    kirki-ecom-tests: STEP | Clicked element on page
+21:05:11 INFO    kirki-ecom-tests: STEP | order ORD-6A96E9A589874 verified in admin orders list
+21:05:11 INFO    kirki-ecom-tests: STEP | test test_admin_orders_list finished [passed]
+21:05:12 INFO    kirki-ecom-tests: STEP | admin order detail OK: ORD-6A96E9A589874
+21:05:12 INFO    kirki-ecom-tests: STEP | customer order history checked for ORD-6A96E9A589874
+21:05:12 INFO    kirki-ecom-tests: STEP | test test_customer_order_history finished [passed]
+21:05:12 INFO    kirki-ecom-tests: STEP | customer order details verified: ORD-6A96E9A589874
+21:05:12 INFO    kirki-ecom-tests: STEP | test test_customer_order_details finished [passed]
+21:05:13 INFO    kirki-ecom-tests: STEP | logged out successfully
+21:05:13 INFO    kirki-ecom-tests: STEP | customer logged out
+21:05:13 INFO    kirki-ecom-tests: STEP | test test_customer_logout finished [passed]
+21:05:13 INFO    kirki-ecom-tests: STEP | shop page visual check: MISMATCH (Visual mismatch detected (73.96% diff))
+21:05:13 INFO    kirki-ecom-tests: STEP | test test_shop_page_visual_baseline finished [passed]
+21:05:13 INFO    kirki-ecom-tests: STEP | cart page visual check: MISMATCH (Visual mismatch detected (89.00% diff))
+21:05:13 INFO    kirki-ecom-tests: STEP | test test_cart_page_visual_baseline finished [passed]
+21:05:14 INFO    kirki-ecom-tests: STEP | checkout page visual check: MISMATCH (Visual mismatch detected (89.02% diff))
+21:05:14 INFO    kirki-ecom-tests: STEP | test test_checkout_page_visual_baseline finished [passed]
+21:05:14 DEBUG   kirki-ecom-tests: cleaning test data with prefix 'KECOM_TEST'
+21:05:14 WARNING kirki-ecom-tests: cleanup_test_data failed (continuing): (1146, "Table 'local.kirki_ecommerce_products' doesn't exist")
+21:05:14 INFO    kirki-ecom-tests: STEP | all tests finished — closing browser session

@@ -10,34 +10,58 @@
 <style>
 /* ── Design Tokens ─────────────────────────────────────────── */
 :root {
-  --bg:        #05070d;
-  --surface:   #0d1117;
-  --surface2:  #161b22;
-  --surface3:  #21262d;
-  --border:    #30363d;
-  --border2:   #21262d;
-  --text:      #e6edf3;
-  --muted:     #7d8590;
-  --muted2:    #484f58;
-  --accent:    #6366f1;
-  --accent2:   #818cf8;
-  --green:     #3fb950;
-  --green2:    #56d364;
-  --yellow:    #d29922;
-  --red:       #f85149;
-  --purple:    #a371f7;
-  --pink:      #f778ba;
-  --cyan:      #39c5cf;
+  --bg:        #f8fafc;        /* slate-50 background */
+  --surface:   #ffffff;        /* clean white surface */
+  --surface2:  #f1f5f9;        /* slate-100 surface hover */
+  --surface3:  #e2e8f0;        /* slate-200 border/active */
+  --border:    #e2e8f0;        /* slate-200 border */
+  --border2:   #cbd5e1;        /* slate-300 border */
+  --text:      #0f172a;        /* slate-900 text */
+  --muted:     #64748b;        /* slate-500 muted text */
+  --muted2:    #94a3b8;        /* slate-400 muted label */
+  --accent:    #2563eb;        /* primary blue */
+  --accent2:   #1d4ed8;
+  --green:     #16a34a;
+  --green2:    #15803d;
+  --yellow:    #d97706;
+  --red:       #dc2626;
+  --purple:    #7c3aed;
+  --pink:      #db2777;
+  --cyan:      #0891b2;
 
   --radius-sm: 6px;
   --radius:    10px;
   --radius-lg: 14px;
   --radius-xl: 20px;
+  --shadow:    0 4px 20px rgba(0,0,0,.06);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.05);
+
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+html[data-theme="dark"] {
+  --bg:        #090d16;
+  --surface:   #0f172a;
+  --surface2:  #1e293b;
+  --surface3:  #334155;
+  --border:    #1e293b;
+  --border2:   #334155;
+  --text:      #f8fafc;
+  --muted:     #94a3b8;
+  --muted2:    #64748b;
+  --accent:    #3b82f6;
+  --accent2:   #60a5fa;
+  --green:     #22c55e;
+  --green2:    #4ade80;
+  --yellow:    #f59e0b;
+  --red:       #ef4444;
+  --purple:    #a855f7;
+  --pink:      #ec4899;
+  --cyan:      #06b6d4;
+
   --shadow:    0 4px 24px rgba(0,0,0,.5);
   --shadow-sm: 0 2px 8px rgba(0,0,0,.4);
-
-  --font: 'Inter', system-ui, sans-serif;
-  --mono: 'JetBrains Mono', monospace;
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */
@@ -145,7 +169,22 @@ a:hover { text-decoration: underline; }
 }
 .topbar-title { font-size: 15px; font-weight: 700; color: var(--text); }
 .topbar-sub   { font-size: 12px; color: var(--muted); margin-top: 1px; }
-.topbar-right { display: flex; align-items: center; gap: 8px; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.theme-toggle-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 12px; font-weight: 500;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.theme-toggle-btn:hover {
+  background: var(--surface3);
+  border-color: var(--border2);
+}
 .status-pill {
   display: flex; align-items: center; gap: 6px;
   padding: 5px 12px;
@@ -273,6 +312,24 @@ a:hover { text-decoration: underline; }
 .run-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(99,102,241,.45); }
 .run-btn:active { transform: translateY(0); }
 .run-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+.abort-btn {
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all .2s;
+  box-shadow: 0 4px 20px rgba(239,68,68,.35);
+  cursor: pointer;
+  border: none;
+  margin-top: 8px;
+}
+.abort-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(239,68,68,.45); }
+.abort-btn:active { transform: translateY(0); }
 
 /* ── Quick Options ─────────────────────────────────────────── */
 .quick-opts { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
@@ -566,6 +623,10 @@ a:hover { text-decoration: underline; }
       <div class="topbar-title" id="pageTitle">Dashboard</div>
     </div>
     <div class="topbar-right">
+      <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Light/Dark Theme">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+        <span id="themeLabel">Dark Mode</span>
+      </button>
       <div class="status-pill ready" id="statusBadge">
         <span class="status-dot"></span>
         <span id="statusText">Ready</span>
@@ -609,16 +670,24 @@ a:hover { text-decoration: underline; }
         <!-- Suite Picker -->
         <div class="card">
           <div class="card-header">
-            <div class="card-title"><i class="fa-solid fa-layer-group" style="color:var(--accent)"></i> Test Suite</div>
+            <div class="card-title"><i class="fa-solid fa-layer-group"></i> Test Suite</div>
           </div>
           <div class="card-body">
             <label class="field-label">Select suite to run</label>
             <select class="select-input" id="suiteSelect">
-              <option value="all" id="optionAllTests">&#128640; Full Regression Suite</option>
-              <option value="smoke">&#128293; Core Smoke Suite</option>
-              <option value="admin">&#128717; Admin Products &amp; Settings</option>
-              <option value="coupons">&#127903; Discounts &amp; Coupons</option>
-              <option value="security">&#128737; Security, SQLi &amp; XSS</option>
+              <option value="ui_walkthrough">Live Interactive Forms (Products, Categories, Tags, Brands, Coupons, All Settings)</option>
+              <option value="performance">Concurrent Multi-User Stress Suite (50-100 Parallel Users)</option>
+              <option value="visual_diff">Visual Layout Diff Engine (Pixel-by-Pixel Baseline)</option>
+              <option value="web_vitals">Core Web Vitals &amp; Performance Audit (LCP / CLS)</option>
+              <option value="security_dast">Security Vulnerability DAST Scanner (SQLi / XSS / BOPA)</option>
+              <option value="all" id="optionAllTests">Full Regression Suite (All 231+ Tests)</option>
+              <option value="smoke">Core Smoke Suite</option>
+              <option value="admin">Admin Products &amp; Settings</option>
+              <option value="frontend">Storefront, Cart &amp; Account Portal</option>
+              <option value="coupons">Discounts &amp; Coupons</option>
+              <option value="orders">Orders &amp; Refund Processing</option>
+              <option value="security">Security, SQLi &amp; XSS</option>
+              <option value="visual">Visual Layout Regression</option>
             </select>
             <div class="quick-opts mt-14">
               <div class="quick-opt"><span>Verbose output</span> -v flag</div>
@@ -631,27 +700,35 @@ a:hover { text-decoration: underline; }
         <!-- Mode Toggle -->
         <div class="card">
           <div class="card-header">
-            <div class="card-title"><i class="fa-solid fa-eye" style="color:var(--purple)"></i> Execution Mode</div>
+            <div class="card-title"><i class="fa-solid fa-sliders"></i> Execution Mode</div>
           </div>
           <div class="card-body">
             <label class="field-label">Browser visibility</label>
             <div class="mode-toggle">
               <div class="mode-option active-headless" id="modeHeadless">
-                <span class="mode-icon">&#128123;</span>
+                <span class="mode-icon"><i class="fa-solid fa-ghost"></i></span>
                 <div>
                   <div class="mode-name">Headless</div>
                   <div class="mode-desc">Fast, silent</div>
                 </div>
               </div>
               <div class="mode-option" id="modeLive">
-                <span class="mode-icon">&#128064;</span>
+                <span class="mode-icon"><i class="fa-solid fa-eye"></i></span>
                 <div>
                   <div class="mode-name">Live</div>
                   <div class="mode-desc">Watch in Chrome</div>
                 </div>
               </div>
+              <div class="mode-option" id="modeParallel" onclick="toggleParallelMode()">
+                <span class="mode-icon"><i class="fa-solid fa-bolt"></i></span>
+                <div>
+                  <div class="mode-name">Parallel</div>
+                  <div class="mode-desc">4 Workers (-n 4)</div>
+                </div>
+              </div>
             </div>
             <input type="hidden" id="headlessCheck" value="true">
+            <input type="hidden" id="parallelCheck" value="false">
 
             <!-- Coverage mini breakdown -->
             <div class="divider"></div>
@@ -665,12 +742,15 @@ a:hover { text-decoration: underline; }
         <!-- Run -->
         <div class="card run-card">
           <div class="card-header">
-            <div class="card-title"><i class="fa-solid fa-circle-play" style="color:var(--green)"></i> Run Tests</div>
+            <div class="card-title"><i class="fa-solid fa-circle-play"></i> Run Tests</div>
           </div>
           <div class="card-body" style="display:flex;flex-direction:column;gap:10px;height:100%;justify-content:space-between">
             <div>
               <button type="button" id="runBtn" class="run-btn">
                 <i class="fa-solid fa-circle-play"></i> Run Selected Suite
+              </button>
+              <button type="button" id="abortBtn" class="abort-btn" style="display:none">
+                <i class="fa-solid fa-hand"></i> Abort Testing
               </button>
               <div class="progress-bar-wrap mt-14" id="progressWrap" style="display:none">
                 <div class="progress-bar-fill" id="progressFill"></div>
@@ -691,9 +771,9 @@ a:hover { text-decoration: underline; }
       <div class="terminal-wrap">
         <div class="terminal-bar">
           <div class="terminal-dots">
-            <div class="dot dot-red"></div>
-            <div class="dot dot-yellow"></div>
-            <div class="dot dot-green"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
           </div>
           <div class="terminal-name">pytest — kirki-ecommerce-tests</div>
           <button class="terminal-btn" id="clearTerminalBtn"><i class="fa-solid fa-xmark"></i> Clear</button>
@@ -704,7 +784,8 @@ a:hover { text-decoration: underline; }
 
       <!-- Cleanup Row -->
       <div class="cleanup-row">
-        <span class="cleanup-label"><i class="fa-solid fa-trash-can" style="color:var(--red)"></i> Cleanup</span>
+        <span class="cleanup-label"><i class="fa-solid fa-trash-can"></i> Cleanup</span>
+        <button class="ghost-btn danger" id="clearAllBtn"><i class="fa-solid fa-dumpster-fire"></i> Clear All Data</button>
         <button class="ghost-btn danger" id="clearScreenshotsBtn"><i class="fa-solid fa-images"></i> Clear Screenshots</button>
         <button class="ghost-btn warn"   id="clearHistoryBtn"><i class="fa-solid fa-clock-rotate-left"></i> Clear History</button>
         <button class="ghost-btn danger" id="clearReportsBtn"><i class="fa-solid fa-file-circle-xmark"></i> Clear Reports</button>
@@ -724,7 +805,7 @@ a:hover { text-decoration: underline; }
       <div class="settings-grid">
 
         <div class="card">
-          <div class="card-header"><div class="card-title"><i class="fa-solid fa-globe" style="color:var(--cyan)"></i> Environment</div></div>
+          <div class="card-header"><div class="card-title"><i class="fa-solid fa-globe"></i> Environment</div></div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Base URL</div><div class="setting-desc">WordPress site address</div></div>
             <input class="text-input" value="http://tutorlms.local" readonly>
@@ -740,7 +821,7 @@ a:hover { text-decoration: underline; }
         </div>
 
         <div class="card">
-          <div class="card-header"><div class="card-title"><i class="fa-solid fa-browser" style="color:var(--purple)"></i> Browser</div></div>
+          <div class="card-header"><div class="card-title"><i class="fa-solid fa-globe"></i> Browser</div></div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Browser Engine</div><div class="setting-desc">Selenium WebDriver</div></div>
             <select class="select-input" style="width:130px">
@@ -759,7 +840,7 @@ a:hover { text-decoration: underline; }
         </div>
 
         <div class="card">
-          <div class="card-header"><div class="card-title"><i class="fa-solid fa-camera" style="color:var(--pink)"></i> Screenshots</div></div>
+          <div class="card-header"><div class="card-title"><i class="fa-solid fa-camera"></i> Screenshots</div></div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Auto-Capture Steps</div><div class="setting-desc">Screenshot on click/nav/input</div></div>
             <button class="toggle-pill on" onclick="this.classList.toggle('on')"></button>
@@ -775,7 +856,7 @@ a:hover { text-decoration: underline; }
         </div>
 
         <div class="card">
-          <div class="card-header"><div class="card-title"><i class="fa-solid fa-file-lines" style="color:var(--yellow)"></i> Reporting</div></div>
+          <div class="card-header"><div class="card-title"><i class="fa-solid fa-file-lines"></i> Reporting</div></div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">HTML Report</div><div class="setting-desc">Generate after each run</div></div>
             <button class="toggle-pill on" onclick="this.classList.toggle('on')"></button>
@@ -882,7 +963,7 @@ var pages = ["dashboard", "settings", "qa-report", "html-report", "screenshots",
 var pageTitles = {
   "dashboard":   "Dashboard",
   "settings":    "Configuration",
-  "qa-report":   "Q&A Report",
+  "qa-report":   "QA Report",
   "html-report": "HTML Report",
   "screenshots": "Screenshots",
   "history":     "Run History"
@@ -918,6 +999,23 @@ function setMode(headless) {
   }
 }
 
+function toggleParallelMode() {
+  var pChk = document.getElementById("parallelCheck");
+  var mP = document.getElementById("modeParallel");
+  if (!pChk || !mP) return;
+  var isPar = pChk.value === "true";
+  pChk.value = isPar ? "false" : "true";
+  if (!isPar) {
+    mP.style.borderColor = "var(--yellow)";
+    mP.style.background = "rgba(253, 224, 71, 0.1)";
+    toast("Parallel Execution Mode (-n 4) ENABLED!", "info");
+  } else {
+    mP.style.borderColor = "";
+    mP.style.background = "";
+    toast("Parallel Execution Mode disabled", "info");
+  }
+}
+
 /* ── Progress Animation ──────────────────────────────────── */
 var progressInterval = null;
 function startProgress() {
@@ -950,30 +1048,64 @@ function runTests() {
   var suite    = document.getElementById("suiteSelect").value;
   var headless = document.getElementById("headlessCheck").value !== "false";
   var runBtn   = document.getElementById("runBtn");
+  var abortBtn = document.getElementById("abortBtn");
   var badge    = document.getElementById("statusBadge");
   var statusTxt= document.getElementById("statusText");
   var terminal = document.getElementById("terminal");
 
   runBtn.disabled = true;
+  runBtn.style.display = "none";
+  if (abortBtn) abortBtn.style.display = "flex";
+
   badge.className = "status-pill running";
   statusTxt.innerText = "Executing tests\u2026";
   terminal.innerText = "$ Initializing pytest execution environment\u2026\n";
   startProgress();
 
+  var isParallel = document.getElementById("parallelCheck") ? document.getElementById("parallelCheck").value === "true" : false;
+
   fetch("/api/run", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ suite: suite, headless: headless })
+    body: JSON.stringify({ suite: suite, headless: headless, parallel: isParallel })
   })
   .then(function(r) { return r.json(); })
   .then(function() { connectStream(); })
   .catch(function(e) {
     runBtn.disabled = false;
+    runBtn.style.display = "flex";
+    if (abortBtn) abortBtn.style.display = "none";
     badge.className = "status-pill error";
     statusTxt.innerText = "Launch error";
     endProgress(false);
     toast("Failed to start test run: " + e.message, "error");
   });
+}
+
+function abortTests() {
+  if (!confirm("Are you sure you want to abort the current test execution?")) return;
+  fetch("/api/abort", { method: "POST" })
+    .then(function(r) { return r.json(); })
+    .then(function() {
+      if (eventSource) eventSource.close();
+      var runBtn   = document.getElementById("runBtn");
+      var abortBtn = document.getElementById("abortBtn");
+      var badge    = document.getElementById("statusBadge");
+      var statusTxt= document.getElementById("statusText");
+      var terminal = document.getElementById("terminal");
+
+      runBtn.disabled = false;
+      runBtn.style.display = "flex";
+      if (abortBtn) abortBtn.style.display = "none";
+
+      badge.className = "status-pill error";
+      statusTxt.innerText = "Aborted";
+      terminal.innerText += "\n\n\u26a0\ufe0f TEST EXECUTION ABORTED BY USER.\n";
+      endProgress(false);
+      loadStats();
+      toast("Test execution aborted by user.", "info");
+    })
+    .catch(function(e) { toast("Error: " + e.message, "error"); });
 }
 
 function connectStream() {
@@ -985,13 +1117,19 @@ function connectStream() {
     if (e.data === "[DONE]") {
       eventSource.close();
       var runBtn   = document.getElementById("runBtn");
+      var abortBtn = document.getElementById("abortBtn");
       var badge    = document.getElementById("statusBadge");
       var statusTxt= document.getElementById("statusText");
+
       runBtn.disabled = false;
+      runBtn.style.display = "flex";
+      if (abortBtn) abortBtn.style.display = "none";
+
       badge.className = "status-pill done";
       statusTxt.innerText = "Run complete";
       endProgress(true);
       updateShotCount();
+      loadStats();
       toast("Test suite completed successfully!", "success");
     } else {
       terminal.innerText += e.data + "\n";
@@ -1001,7 +1139,11 @@ function connectStream() {
 
   eventSource.onerror = function() {
     eventSource.close();
-    document.getElementById("runBtn").disabled = false;
+    var runBtn   = document.getElementById("runBtn");
+    var abortBtn = document.getElementById("abortBtn");
+    runBtn.disabled = false;
+    runBtn.style.display = "flex";
+    if (abortBtn) abortBtn.style.display = "none";
     endProgress(false);
   };
 }
@@ -1029,7 +1171,7 @@ function loadStats() {
 
       // Update dropdown option label
       var optionAll = document.getElementById("optionAllTests");
-      if (optionAll) optionAll.innerText = "🚀 All Tests (" + total + " total)";
+      if (optionAll) optionAll.innerText = "All Tests (" + total + " total)";
 
       // Update Last Run stats
       var lr = d.last_run || {};
@@ -1143,7 +1285,7 @@ function loadHistory() {
 
 /* ── Cleanup ─────────────────────────────────────────────── */
 function clearData(target, onDone) {
-  var labels = { screenshots: "all screenshots", history: "report history", reports: "latest reports" };
+  var labels = { screenshots: "all screenshots", history: "report history", reports: "latest reports", all: "all data and reports" };
   if (!confirm("Delete " + (labels[target] || target) + "? This cannot be undone.")) return;
 
   var msg = document.getElementById("clearMsg");
@@ -1155,6 +1297,15 @@ function clearData(target, onDone) {
       toast("Deleted " + d.deleted + " file(s) from " + target + ".", "success");
       if (msg) { msg.style.color = "var(--green)"; msg.innerText = d.deleted + " file(s) deleted."; setTimeout(function(){ msg.innerText=""; }, 4000); }
       loadStats();
+
+      // Refresh iframe report tabs if reports/all cleared
+      if (target === "reports" || target === "all" || target === "history") {
+        var qaFrame = document.querySelector("#page-qa-report iframe");
+        if (qaFrame) qaFrame.src = "/qa-report?t=" + Date.now();
+        var htmlFrame = document.querySelector("#page-html-report iframe");
+        if (htmlFrame) htmlFrame.src = "/report?t=" + Date.now();
+      }
+
       if (onDone) onDone();
     })
     .catch(function(e) { toast("Error: " + e.message, "error"); });
@@ -1176,8 +1327,10 @@ document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("viewHTMLBtn").addEventListener("click",  function() { navigateTo("html-report"); });
   document.getElementById("viewShotsBtn").addEventListener("click", function() { navigateTo("screenshots"); });
 
-  // Run button
+  // Run & Abort buttons
   document.getElementById("runBtn").addEventListener("click", runTests);
+  var abortBtn = document.getElementById("abortBtn");
+  if (abortBtn) abortBtn.addEventListener("click", abortTests);
 
   // Mode toggle
   document.getElementById("modeHeadless").addEventListener("click", function() { setMode(true); });
@@ -1189,6 +1342,12 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   // Cleanup
+  document.getElementById("clearAllBtn").addEventListener("click", function() {
+    clearData("all", function() {
+      document.getElementById("terminal").innerText = "$ All data and reports cleared. System ready.\n";
+      document.getElementById("shotCount").innerText = "0";
+    });
+  });
   document.getElementById("clearScreenshotsBtn").addEventListener("click", function() { clearData("screenshots", function() { document.getElementById("shotCount").innerText = "0"; }); });
   document.getElementById("clearHistoryBtn").addEventListener("click",     function() { clearData("history"); });
   document.getElementById("clearReportsBtn").addEventListener("click",     function() { clearData("reports"); });
@@ -1207,6 +1366,39 @@ document.addEventListener("DOMContentLoaded", function() {
   // Lightbox
   document.getElementById("lightboxClose").addEventListener("click", closeLightbox);
   document.getElementById("lightbox").addEventListener("click", function(e) { if (e.target === this) closeLightbox(); });
+
+  // Theme Switcher Engine
+  function initTheme() {
+    var savedTheme = localStorage.getItem("kirki_theme") || "light";
+    applyTheme(savedTheme);
+  }
+
+  window.toggleTheme = function() {
+    var currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+    var newTheme = currentTheme === "dark" ? "light" : "dark";
+    applyTheme(newTheme);
+  };
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("kirki_theme", theme);
+
+    var icon = document.getElementById("themeIcon");
+    var label = document.getElementById("themeLabel");
+
+    if (icon && label) {
+      if (theme === "dark") {
+        icon.className = "fa-solid fa-sun";
+        label.textContent = "Light Mode";
+      } else {
+        icon.className = "fa-solid fa-moon";
+        label.textContent = "Dark Mode";
+      }
+    }
+  }
+
+  // Init Theme immediately
+  initTheme();
 
   // Init
   loadStats();

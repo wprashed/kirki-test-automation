@@ -25,6 +25,7 @@ from fixtures.conftest import (  # noqa: E402, F401
     driver,
     driver_factory,
     guest_cart_client,
+    mobile_driver,
     session_driver,
     site_pages,
     smoke_product,
@@ -46,6 +47,8 @@ def pytest_configure(config):
         "security": "security checks",
         "critical": "critical-path tests",
         "order": "order lifecycle tests",
+        "ui_walkthrough": "real human interactive UI tests",
+        "performance": "high-concurrency multi-user stress testing",
     }
     for name, desc in markers.items():
         config.addinivalue_line("markers", f"{name}: {desc}")

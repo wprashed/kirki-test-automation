@@ -27,8 +27,12 @@ class LoginPage(BasePage):
 
     def login(self, email: str, password: str, remember: bool = False) -> None:
         log_step(f"login as {email}")
-        self.find(*self.EMAIL).send_keys(email)
-        self.find(*self.PASSWORD).send_keys(password)
+        e = self.find(*self.EMAIL)
+        e.clear()
+        e.send_keys(email)
+        p = self.find(*self.PASSWORD)
+        p.clear()
+        p.send_keys(password)
         if remember:
             remember_el = self.find(*self.REMEMBER)
             if not remember_el.is_selected():

@@ -119,9 +119,11 @@ class TestCheckoutAndPayment:
     def test_order_persisted_via_rest(self, wp_rest, smoke_ctx):
         """The order exists in the DB with correct totals via REST."""
         wp_rest.client.login_as(settings.admin_user, settings.admin_password)
-        res = wp_rest.orders.list_all(
-            search=smoke_ctx.order_number or smoke_ctx.customer_email
-        )
+        try:
+            res = wp_rest.orders.list_all(search=smoke_ctx.order_number or smoke_ctx.customer_email)
+        except Exception:
+            wp_rest.client.login_as(settings.admin_user, settings.admin_password)
+            res = wp_rest.orders.list_all()
         orders = res.get("data", res.get("results", [])) if isinstance(res, dict) else res
         filtered = [
             o for o in orders

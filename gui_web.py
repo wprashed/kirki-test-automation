@@ -57,18 +57,31 @@ def api_run():
     run_state["is_running"] = True
 
     def _execute():
-        cmd = [sys.executable, "-m", "pytest"]
+        venv_python = BASE_DIR / ".venv" / "bin" / "python3"
+        python_bin = str(venv_python) if venv_python.exists() else sys.executable
+        cmd = [python_bin, "-m", "pytest"]
         suite_map = {
-            "smoke":    "tests/smoke/",
-            "admin":    "tests/admin/",
-            "coupons":  "tests/coupons/",
-            "security": "tests/security/",
-            "all":      "tests/",
+            "smoke":          "tests/smoke/",
+            "admin":          "tests/admin/",
+            "coupons":        "tests/coupons/",
+            "frontend":       "tests/frontend/",
+            "orders":         "tests/orders/",
+            "security":       "tests/security/",
+            "visual":         "tests/visual/",
+            "visual_diff":    "tests/visual/test_visual_layout_diff_regression.py",
+            "web_vitals":     "tests/performance/test_core_web_vitals_audit.py",
+            "security_dast":  "tests/security/test_dast_vulnerability_scanner.py",
+            "ui_walkthrough": "tests/ui_walkthrough/",
+            "performance":    "tests/performance/",
+            "all":            "tests/",
         }
         cmd.append(suite_map.get(suite, "tests/"))
         cmd += ["-v",
                 f"--html={BASE_DIR / 'reports' / 'latest_report.html'}",
                 "--self-contained-html"]
+
+        if data.get("parallel", False):
+            cmd.extend(["-n", "4"])
 
         # Propagate headless flag via env so conftest.py / settings pick it up
         import os as _os
@@ -107,6 +120,7 @@ def api_run():
             except ValueError:
                 dur = 0.0
             generate_summary_report(total, passed, failed, dur, log_text)
+            generate_qa_report(log_text, total, passed, failed, dur)
         except Exception:
             pass
 
@@ -114,6 +128,29 @@ def api_run():
 
     threading.Thread(target=_execute, daemon=True).start()
     return jsonify({"status": "started"})
+
+
+@app.route("/api/abort", methods=["POST"])
+def api_abort():
+    """Abort currently running pytest process immediately."""
+    proc = run_state.get("process")
+    if proc:
+        try:
+            proc.terminate()
+            time.sleep(0.3)
+            if proc.poll() is None:
+                proc.kill()
+        except Exception:
+            pass
+
+    run_state["is_running"] = False
+    run_state["process"] = None
+
+    if LOG_FILE.exists():
+        with LOG_FILE.open("a", encoding="utf-8") as fh:
+            fh.write("\n\n⚠️ TEST EXECUTION ABORTED BY USER.\n")
+
+    return jsonify({"status": "aborted"})
 
 
 # ── Statistics API ─────────────────────────────────────────────────────────────
@@ -192,16 +229,13 @@ def api_stats():
 @app.route("/api/stream")
 def api_stream():
     def _generate():
-        # Wait until log file exists (up to 5 s)
-        for _ in range(50):
-            if LOG_FILE.exists():
-                break
-            time.sleep(0.1)
-
+        # Ensure log file exists
         if not LOG_FILE.exists():
-            yield "data: Log file not found.\n\n"
-            yield "data: [DONE]\n\n"
-            return
+            LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+            LOG_FILE.write_text(
+                "=== Kirki Test Automation Studio Ready ===\nClick 'Run Selected Suite' to execute automated tests.\n",
+                encoding="utf-8"
+            )
 
         with LOG_FILE.open("r", encoding="utf-8") as fh:
             while True:
@@ -225,24 +259,42 @@ def api_stream():
 @app.route("/api/clear/<target>", methods=["POST"])
 def api_clear(target):
     """Delete files inside screenshots/, history/, or the latest reports."""
-    allowed = {
-        "screenshots": (SCREENSHOTS_DIR, ["*.png", "*.jpg", "*.jpeg", "*.webp"]),
-        "history":     (HISTORY_DIR,     ["*.html"]),
-        "reports":     (BASE_DIR / "reports", ["latest_report.html", "qa_report.html", "gui_run.log"]),
-    }
-    if target not in allowed:
-        return jsonify({"error": "unknown target"}), 400
-
-    directory, patterns = allowed[target]
     deleted = 0
-    if directory.exists():
-        for pattern in patterns:
-            for f in directory.glob(pattern):
+    
+    if target in ("screenshots", "all"):
+        if SCREENSHOTS_DIR.exists():
+            for f in SCREENSHOTS_DIR.glob("*.*"):
                 try:
                     f.unlink()
                     deleted += 1
                 except Exception:
                     pass
+
+    if target in ("history", "all"):
+        if HISTORY_DIR.exists():
+            for f in HISTORY_DIR.glob("*.html"):
+                try:
+                    f.unlink()
+                    deleted += 1
+                except Exception:
+                    pass
+
+    if target in ("reports", "all"):
+        reports_dir = BASE_DIR / "reports"
+        if reports_dir.exists():
+            for pattern in ["*.html", "*.log", "*.txt"]:
+                for f in reports_dir.glob(pattern):
+                    try:
+                        f.unlink()
+                        deleted += 1
+                    except Exception:
+                        pass
+        # Re-initialize LOG_FILE so stream endpoint is ready
+        LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        LOG_FILE.write_text(
+            "=== Kirki Test Automation Studio Data Cleared ===\nReady for next test run.\n",
+            encoding="utf-8"
+        )
 
     return jsonify({"status": "ok", "target": target, "deleted": deleted})
 
@@ -278,20 +330,37 @@ def serve_history(filename):
 @app.route("/report")
 def report():
     f = BASE_DIR / "reports" / "latest_report.html"
+    if not f.exists():
+        f = BASE_DIR / "reports" / "report.html"
     if f.exists():
         return Response(f.read_bytes(), mimetype="text/html")
-    return "<h1 style='font-family:sans-serif;padding:2rem'>No report yet — run the test suite first.</h1>", 404
+    return """<!DOCTYPE html><html class="dark"><head><script src="https://cdn.tailwindcss.com"></script><style>body{background-color:#0B0F19;color:#F1F5F9;font-family:sans-serif;}</style></head>
+    <body class="flex items-center justify-center min-h-screen p-8">
+        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center max-w-md space-y-3">
+            <h2 class="text-xl font-black text-white">No Test Report Available</h2>
+            <p class="text-slate-400 text-xs">Run a test suite from the Web Automation Studio or CLI to generate execution reports.</p>
+        </div>
+    </body></html>""", 200
 
 
 @app.route("/qa-report")
 def qa_report():
     qa_file = BASE_DIR / "reports" / "qa_report.html"
     if not qa_file.exists():
-        log_text = LOG_FILE.read_text(encoding="utf-8") if LOG_FILE.exists() else ""
-        generate_qa_report(log_text)
+        if LOG_FILE.exists() and LOG_FILE.read_text(encoding="utf-8", errors="ignore").strip():
+            log_text = LOG_FILE.read_text(encoding="utf-8", errors="ignore")
+            generate_qa_report(log_text)
+        else:
+            return """<!DOCTYPE html><html class="dark"><head><script src="https://cdn.tailwindcss.com"></script><style>body{background-color:#0B0F19;color:#F1F5F9;font-family:sans-serif;}</style></head>
+            <body class="flex items-center justify-center min-h-screen p-8">
+                <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center max-w-md space-y-3">
+                    <h2 class="text-xl font-black text-white">No QA Report Data</h2>
+                    <p class="text-slate-400 text-xs">Run a test suite from the Web Automation Studio or CLI to generate a live QA report.</p>
+                </div>
+            </body></html>""", 200
     if qa_file.exists():
         return Response(qa_file.read_bytes(), mimetype="text/html")
-    return "<h1 style='font-family:sans-serif;padding:2rem'>No Q&A report yet — run the test suite first.</h1>", 404
+    return "<h1 style='font-family:sans-serif;padding:2rem'>No QA report available.</h1>", 404
 
 
 # ── Entry ─────────────────────────────────────────────────────────────────────

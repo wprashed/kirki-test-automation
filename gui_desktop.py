@@ -66,7 +66,7 @@ class KirkiTestRunnerApp:
         self.btn_report = ttk.Button(btn_frame, text="📊 Open HTML Report", command=self.open_report)
         self.btn_report.pack(side="left", px=5)
 
-        self.btn_qa = ttk.Button(btn_frame, text="❓ Open Q&A Report", command=self.open_qa_report)
+        self.btn_qa = ttk.Button(btn_frame, text="❓ Open QA Report", command=self.open_qa_report)
         self.btn_qa.pack(side="left", px=5)
 
         # Output Console Frame

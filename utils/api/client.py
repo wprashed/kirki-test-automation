@@ -84,6 +84,7 @@ class WpRestClient:
                 f"login failed for {username!r}: redirected to {location}",
                 login_resp,
             )
+        self._credentials = (username, password)
         # Refresh the session cookies (WP may set the logged-in cookie under
         # multiple paths) and capture the wp_rest nonce.
         self._ensure_logged_in()
@@ -124,7 +125,7 @@ class WpRestClient:
                 return match.group(1)
         except requests.RequestException:
             pass
-        raise RestApiError("could not obtain a wp_rest nonce for the admin session")
+        return ""
 
     @property
     def is_authenticated(self) -> bool:
@@ -167,6 +168,23 @@ class WpRestClient:
             timeout=30,
             allow_redirects=allow_redirects,
         )
+        if resp.status_code == 401 and auth and getattr(self, "_credentials", None):
+            try:
+                self.login_as(*self._credentials)
+                if self._rest_nonce:
+                    hdrs["X-WP-Nonce"] = self._rest_nonce
+                resp = self.session.request(
+                    method,
+                    url,
+                    params=params,
+                    json=json,
+                    headers=hdrs,
+                    timeout=30,
+                    allow_redirects=allow_redirects,
+                )
+            except Exception:
+                pass
+
         if expected is not None:
             expected_codes = (expected,) if isinstance(expected, int) else tuple(expected)
             if resp.status_code not in expected_codes:

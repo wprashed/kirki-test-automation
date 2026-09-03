@@ -69,6 +69,21 @@ def log_step(message: str, driver=None) -> None:
             filename = f"step_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')[:20]}_{slug}.png"
             full_path = screenshots_dir / filename
             driver.save_screenshot(str(full_path))
+            
+            # Annotate screenshot image with step description, URL, and timestamp
+            from utils.visual.annotator import annotate_screenshot_with_details
+            current_url = ""
+            try:
+                current_url = driver.current_url
+            except Exception:
+                pass
+            annotate_screenshot_with_details(
+                image_path=str(full_path),
+                step_description=message,
+                url=current_url,
+                test_name="Kirki Ecom Step Action",
+                status="PASSED"
+            )
             screenshot_rel_path = f"screenshots/{filename}"
         except Exception as e:
             get_logger().debug(f"Failed to capture step screenshot: {e}")

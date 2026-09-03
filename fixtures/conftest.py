@@ -50,15 +50,55 @@ def _firefox_driver() -> webdriver.Firefox:
     return webdriver.Firefox(service=service, options=options)
 
 
+def _edge_driver() -> webdriver.Edge:
+    from selenium.webdriver.edge.options import Options as EdgeOptions
+    from selenium.webdriver.edge.service import Service as EdgeService
+    options = EdgeOptions()
+    if settings.headless:
+        options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    service = EdgeService()
+    return webdriver.Edge(service=service, options=options)
+
+
+def _mobile_chrome_driver() -> webdriver.Chrome:
+    options = ChromeOptions()
+    if settings.headless:
+        options.add_argument("--headless=new")
+    mobile_emulation = {"deviceMetrics": {"width": 375, "height": 812, "pixelRatio": 3.0}, "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15"}
+    options.add_experimental_option("mobileEmulation", mobile_emulation)
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    service = ChromeService()
+    drv = webdriver.Chrome(service=service, options=options)
+    drv.set_window_size(375, 812)
+    return drv
+
+
 @pytest.fixture(scope="session")
 def driver_factory():
     """Returns a callable that creates a fresh browser driver."""
     browser = settings.browser.lower()
     if browser == "firefox":
         return _firefox_driver
-    if browser == "chrome":
+    if browser == "edge":
+        return _edge_driver
+    if browser in ("chrome", "chromium"):
         return _chrome_driver
-    raise ValueError(f"unsupported BROWSER={browser!r} (use chrome or firefox)")
+    raise ValueError(f"unsupported BROWSER={browser!r} (use chrome, firefox, or edge)")
+
+
+@pytest.fixture
+def mobile_driver():
+    """Chrome browser driver emulating an iPhone 13 mobile viewport (375x812)."""
+    drv = _mobile_chrome_driver()
+    drv.implicitly_wait(settings.implicit_wait)
+    yield drv
+    try:
+        drv.quit()
+    except Exception:
+        pass
 
 
 # ── Persistent session browser ────────────────────────────────────────────────
@@ -75,7 +115,15 @@ def session_driver(driver_factory) -> Iterator[webdriver.Remote]:
     drv.implicitly_wait(settings.implicit_wait)
     drv.set_page_load_timeout(60)
     attach_console_listener(drv)
-    log_step("browser session started — window will stay open until all tests finish")
+    try:
+        from pages.admin.admin_pages import AdminLoginPage
+        AdminLoginPage(drv).login_as_admin()
+    except Exception:
+        try:
+            drv.get(settings.wp_base_url)
+        except Exception:
+            pass
+    log_step(f"browser session started on {settings.wp_base_url} — window will stay open until all tests finish")
     yield drv
     log_step("all tests finished — closing browser session")
     try:
@@ -84,17 +132,67 @@ def session_driver(driver_factory) -> Iterator[webdriver.Remote]:
         pass
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def driver(session_driver, request) -> Iterator[webdriver.Remote]:
     """Per-test wrapper around the shared session browser.
 
-    Yields the same driver instance for every test — the browser is NEVER
-    closed between tests.  Only failure artifacts (screenshot / page-source /
-    console log) are captured per-test when a test fails.
+    Ensures the Chrome window visually updates on screen for every test module!
     """
     test_name = request.node.name
+    module_name = request.node.fspath.basename if hasattr(request.node, "fspath") else ""
 
-    yield session_driver          # ← same window, no quit()
+    route_map = {
+        "test_tags.py": "wp-admin/admin.php?page=kirki-ecommerce#/tags",
+        "test_brands.py": "wp-admin/admin.php?page=kirki-ecommerce#/brands",
+        "test_categories.py": "wp-admin/admin.php?page=kirki-ecommerce#/categories",
+        "test_collections.py": "wp-admin/admin.php?page=kirki-ecommerce#/collections",
+        "test_attributes.py": "wp-admin/admin.php?page=kirki-ecommerce#/attributes",
+        "test_shipping.py": "wp-admin/admin.php?page=kirki-ecommerce#/shipping",
+        "test_tax_profiles.py": "wp-admin/admin.php?page=kirki-ecommerce#/taxes",
+        "test_taxes_currencies.py": "wp-admin/admin.php?page=kirki-ecommerce#/settings",
+        "test_customers.py": "wp-admin/admin.php?page=kirki-ecommerce#/customers",
+        "test_settings_api.py": "wp-admin/admin.php?page=kirki-ecommerce#/settings",
+        "test_coupons.py": "wp-admin/admin.php?page=kirki-ecommerce#/coupons",
+        "test_coupons_advanced.py": "wp-admin/admin.php?page=kirki-ecommerce#/coupons",
+        "test_coupons_extended.py": "wp-admin/admin.php?page=kirki-ecommerce#/coupons",
+        "test_order_lifecycle.py": "wp-admin/admin.php?page=kirki-ecommerce#/orders",
+        "test_order_refunds.py": "wp-admin/admin.php?page=kirki-ecommerce#/orders",
+        "test_product_advanced.py": "wp-admin/admin.php?page=kirki-ecommerce#/products",
+        "test_product_duplicate_bulk.py": "wp-admin/admin.php?page=kirki-ecommerce#/products",
+        "test_stock_management.py": "wp-admin/admin.php?page=kirki-ecommerce#/products",
+        "test_admin_reports_analytics.py": "wp-admin/admin.php?page=kirki-ecommerce#/reports",
+        "test_admin_settings_extended.py": "wp-admin/admin.php?page=kirki-ecommerce#/settings",
+        "test_onboarding.py": "wp-admin/admin.php?page=kirki-ecommerce#/dashboard",
+        "test_bulk_operations.py": "wp-admin/admin.php?page=kirki-ecommerce#/products",
+        "test_cart_api.py": "cart",
+        "test_account_api.py": "account",
+        "test_customer_profile.py": "account",
+        "test_product_variations.py": "shop",
+        "test_storefront_reviews_ratings.py": "shop",
+    }
+
+    # Verify session health
+    try:
+        _ = session_driver.current_url
+    except Exception:
+        try:
+            session_driver = driver_factory()
+            session_driver.implicitly_wait(settings.implicit_wait)
+            session_driver.set_page_load_timeout(60)
+            from pages.admin.admin_pages import AdminLoginPage
+            AdminLoginPage(session_driver).login_as_admin()
+        except Exception:
+            pass
+
+    if module_name in route_map:
+        try:
+            target_url = f"{settings.wp_base_url.rstrip('/')}/{route_map[module_name]}"
+            if session_driver.current_url != target_url:
+                session_driver.get(target_url)
+        except Exception:
+            pass
+
+    yield session_driver
 
     outcome = "passed"
     try:

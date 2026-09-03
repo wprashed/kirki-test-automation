@@ -27,13 +27,10 @@ class ProductsApi:
     def create(self, *, title: str, price: float = 49.99, stock: int = 10,
                status: str = "published", short_description: str = "",
                description: str = "", has_variants: bool = False,
-               currency_id: int = 1, variant: dict | None = None) -> dict:
-        """Create a product with a variant. Mirrors the admin SPA payload
-        (POST /products). Returns the product resource dict.
-
-        currency_id is required by the products table (verified against
-        CreateProductDTO / CreateProductsTable migration).
-        """
+               currency_id: int = 1, variant: dict | None = None,
+               categories: list[int] | None = None, tags: list[int] | None = None,
+               brand_id: int | None = None, **extra) -> dict:
+        """Create a product with a variant and optional taxonomies (POST /products)."""
         payload: dict[str, Any] = {
             "title": title,
             "status": status,
@@ -42,10 +39,28 @@ class ProductsApi:
             "has_variants": has_variants,
             "currency_id": currency_id,
         }
+        if categories:
+            payload["categories"] = categories
+        if tags:
+            payload["tags"] = tags
+        if brand_id:
+            payload["brand_id"] = brand_id
+        payload.update(extra)
+
         if variant is not None:
             payload["variants"] = [variant]
-        resp = self.client.post("/products", json=payload, expected=201)
-        data = resp.json()["data"]
+        elif "variants" not in payload:
+            payload["variants"] = [{
+                "base_price": float(price),
+                "available_quantity": stock,
+                "track_inventory": True,
+                "in_stock": True,
+                "is_default": True,
+                "sku": f"SKU-{uuid.uuid4().hex[:8].upper()}"
+            }]
+
+        resp = self.client.post("/products", json=payload, expected=(200, 201))
+        data = resp.json().get("data", resp.json())
         log_debug(f"created product id={data.get('id')} {data.get('title')!r}")
         return data
 
@@ -97,7 +112,11 @@ class CouponsApi:
                discount_value_type: str = "percentage",
                discount_amount_percentage: float = 10.0,
                is_active: bool = True, **extra) -> dict:
-        """Create a coupon. discount_value_type: percentage|fixed."""
+        """Create a coupon via REST API (POST /coupons)."""
+        import datetime
+        now_str = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+        fixed_val = float(extra.pop("fixed_amount", 5.0))
+
         payload: dict[str, Any] = {
             "method": "code",
             "code": code,
@@ -105,16 +124,18 @@ class CouponsApi:
             "discount_type": "amount-off",
             "discount_target": "order",
             "discount_value_type": discount_value_type,
+            "discount_amount": discount_amount_percentage if discount_value_type == "percentage" else fixed_val,
+            "start_datetime": now_str,
             "is_active": is_active,
         }
         if discount_value_type == "percentage":
             payload["discount_amount_percentage"] = discount_amount_percentage
         else:
-            payload["base_discount_amount_fixed"] = int(round(
-                extra.pop("fixed_amount", 5.0) * 100))
+            payload["base_discount_amount_fixed"] = int(round(fixed_val * 100))
         payload.update(extra)
-        resp = self.client.post("/coupons", json=payload, expected=201)
-        data = resp.json()["data"]
+
+        resp = self.client.post("/coupons", json=payload, expected=(200, 201))
+        data = resp.json().get("data", resp.json())
         log_debug(f"created coupon id={data.get('id')} code={data.get('code')!r}")
         return data
 
