@@ -1,7 +1,0 @@
-17:35:21 DEBUG   kirki-ecom-tests: created product id=80 'KECOM_TEST_Smoke Product_fec34cebbb'
-17:35:22 INFO    kirki-ecom-tests: STEP | fill contact email KECOM_TEST_smoke_1f9e10db@example.com
-17:35:22 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
-17:35:23 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True
-17:35:23 INFO    kirki-ecom-tests: STEP | select payment method cod
-17:35:23 INFO    kirki-ecom-tests: STEP | checkout totals: subtotal=4999 shipping=0 total=4999
-17:35:23 INFO    kirki-ecom-tests: STEP | click Place Order

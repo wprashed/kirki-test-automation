@@ -1,4 +1,0 @@
-17:10:47 DEBUG   kirki-ecom-tests: created product id=45 'Checkout Method Test'
-17:10:48 INFO    kirki-ecom-tests: STEP | fill contact email test@example.com
-17:10:48 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
-17:10:49 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True

@@ -1,7 +1,0 @@
-21:02:55 INFO    kirki-ecom-tests: STEP | browser session started — window will stay open until all tests finish
-21:02:56 INFO    kirki-ecom-tests: STEP | Navigated to page path /shop/
-21:02:56 INFO    kirki-ecom-tests: STEP | click Add to Cart on product page
-21:03:12 INFO    kirki-ecom-tests: STEP | test test_add_to_cart_from_shop finished [passed]
-21:03:12 INFO    kirki-ecom-tests: STEP | test test_cart_page_subtotal finished [passed]
-21:03:22 INFO    kirki-ecom-tests: STEP | test test_cart_quantity_update finished [passed]
-21:03:22 INFO    kirki-ecom-tests: STEP | all tests finished — closing browser session

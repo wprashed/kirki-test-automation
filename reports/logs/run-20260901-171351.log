@@ -1,5 +1,0 @@
-17:13:52 DEBUG   kirki-ecom-tests: created product id=57 'Form Validation Inspect'
-17:13:53 INFO    kirki-ecom-tests: STEP | fill contact email test_form@example.com
-17:13:53 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
-17:13:53 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True
-17:13:53 INFO    kirki-ecom-tests: STEP | select payment method cod

@@ -1,9 +1,0 @@
-16:27:58 DEBUG   kirki-ecom-tests: created product id=11 'KECOM_TEST Smoke c44b18'
-16:27:58 INFO    kirki-ecom-tests: STEP | smoke product created: id=11 'KECOM_TEST Smoke c44b18'
-16:27:58 INFO    kirki-ecom-tests: STEP | product verified: price=4999 cents stock=10
-16:27:59 INFO    kirki-ecom-tests: STEP | shop card found: KECOM_TEST Smoke c44b18 @ 4999 cents
-16:28:00 INFO    kirki-ecom-tests: STEP | search shop for 'KECOM_TEST Smoke c44b18'
-16:28:01 INFO    kirki-ecom-tests: STEP | search returned card: KECOM_TEST Smoke c44b18
-16:28:02 INFO    kirki-ecom-tests: STEP | product detail OK: KECOM_TEST Smoke c44b18
-16:28:02 DEBUG   kirki-ecom-tests: cleaning test data with prefix 'KECOM_TEST'
-16:28:02 WARNING kirki-ecom-tests: cleanup_test_data failed (continuing): (1146, "Table 'local.kirki_ecommerce_products' doesn't exist")

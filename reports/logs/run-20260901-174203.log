@@ -1,2 +1,0 @@
-17:42:04 DEBUG   kirki-ecom-tests: created customer id=2 email='test_cust_123@example.com'
-17:42:05 INFO    kirki-ecom-tests: STEP | login as test_cust_123@example.com

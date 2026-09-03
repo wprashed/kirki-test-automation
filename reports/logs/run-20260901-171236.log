@@ -1,6 +1,0 @@
-17:12:37 DEBUG   kirki-ecom-tests: created product id=50 'Console Order Debug'
-17:12:38 INFO    kirki-ecom-tests: STEP | fill contact email test_order@example.com
-17:12:38 INFO    kirki-ecom-tests: STEP | fill shipping address for Smoke Customer
-17:12:38 INFO    kirki-ecom-tests: STEP | set billing-same-as-shipping = True
-17:12:38 INFO    kirki-ecom-tests: STEP | select payment method cod
-17:12:39 INFO    kirki-ecom-tests: STEP | click Place Order
