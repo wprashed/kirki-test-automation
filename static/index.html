@@ -607,9 +607,9 @@ a:hover { text-decoration: underline; }
     <div class="env-card">
       <div class="env-row">
         <span class="env-label">Environment</span>
-        <span class="env-badge">&#9679; LOCAL</span>
+        <span class="env-badge" id="envBadgeDisplay">&#9679; LOCAL</span>
       </div>
-      <div class="env-url">http://tutorlms.local</div>
+      <div class="env-url" id="envUrlDisplay">—</div>
     </div>
   </div>
 </aside>
@@ -796,10 +796,14 @@ a:hover { text-decoration: underline; }
 
     <!-- ══ PAGE: Settings ═══════════════════════════════════ -->
     <div class="page" id="page-settings">
-      <div class="page-header">
+      <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
         <div>
           <div class="page-heading">Configuration</div>
           <div class="page-subheading">Framework settings and environment options</div>
+        </div>
+        <div>
+          <button class="ghost-btn" id="saveAllSettingsBtn" onclick="saveAllSettings()" style="padding:8px 16px;font-size:13px"><i class="fa-solid fa-floppy-disk"></i> Save All Settings</button>
+          <div id="saveAllMsg" style="font-size:11px;color:var(--green);text-align:right;margin-top:4px"></div>
         </div>
       </div>
       <div class="settings-grid">
@@ -808,15 +812,19 @@ a:hover { text-decoration: underline; }
           <div class="card-header"><div class="card-title"><i class="fa-solid fa-globe"></i> Environment</div></div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Base URL</div><div class="setting-desc">WordPress site address</div></div>
-            <input class="text-input" value="http://tutorlms.local" readonly>
+            <input class="text-input" id="settingBaseUrl" value="http://tutorlms.local" placeholder="http://tutorlms.local" style="width:180px">
           </div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Admin User</div><div class="setting-desc">WordPress admin login</div></div>
-            <input class="text-input" value="admin" readonly>
+            <input class="text-input" id="settingAdminUser" value="admin" placeholder="admin" style="width:180px">
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">Admin Password</div><div class="setting-desc">WordPress admin password</div></div>
+            <input class="text-input" id="settingAdminPassword" type="password" placeholder="••••••••" style="width:180px">
           </div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">REST Prefix</div><div class="setting-desc">API namespace path</div></div>
-            <input class="text-input" value="wp-json" readonly>
+            <input class="text-input" id="settingRestPrefix" value="wp-json" placeholder="wp-json" style="width:180px">
           </div>
         </div>
 
@@ -824,18 +832,19 @@ a:hover { text-decoration: underline; }
           <div class="card-header"><div class="card-title"><i class="fa-solid fa-globe"></i> Browser</div></div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Browser Engine</div><div class="setting-desc">Selenium WebDriver</div></div>
-            <select class="select-input" style="width:130px">
-              <option>Chrome</option>
-              <option>Firefox</option>
+            <select class="select-input" id="settingBrowser" style="width:180px">
+              <option value="chrome">Chrome</option>
+              <option value="firefox">Firefox</option>
+              <option value="edge">Edge</option>
             </select>
           </div>
           <div class="setting-row">
-            <div class="setting-info"><div class="setting-name">Explicit Wait</div><div class="setting-desc">Element timeout (s)</div></div>
-            <input class="text-input" value="15" readonly>
+            <div class="setting-info"><div class="setting-name">Explicit Wait</div><div class="setting-desc">Element timeout (seconds)</div></div>
+            <input class="text-input" id="settingExplicitWait" value="15" placeholder="15" style="width:180px">
           </div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Window Size</div><div class="setting-desc">Viewport dimensions</div></div>
-            <input class="text-input" value="1440×1000" readonly>
+            <input class="text-input" id="settingWindowSize" value="1440x1000" placeholder="1440x1000" style="width:180px">
           </div>
         </div>
 
@@ -843,15 +852,15 @@ a:hover { text-decoration: underline; }
           <div class="card-header"><div class="card-title"><i class="fa-solid fa-camera"></i> Screenshots</div></div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Auto-Capture Steps</div><div class="setting-desc">Screenshot on click/nav/input</div></div>
-            <button class="toggle-pill on" onclick="this.classList.toggle('on')"></button>
+            <button class="toggle-pill on" id="toggleAutoCapture" onclick="this.classList.toggle('on')"></button>
           </div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Capture on Failure</div><div class="setting-desc">Extra screenshot on test fail</div></div>
-            <button class="toggle-pill on" onclick="this.classList.toggle('on')"></button>
+            <button class="toggle-pill on" id="toggleCaptureFailure" onclick="this.classList.toggle('on')"></button>
           </div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Console Errors</div><div class="setting-desc">Capture browser console logs</div></div>
-            <button class="toggle-pill on" onclick="this.classList.toggle('on')"></button>
+            <button class="toggle-pill on" id="toggleConsoleErrors" onclick="this.classList.toggle('on')"></button>
           </div>
         </div>
 
@@ -859,15 +868,15 @@ a:hover { text-decoration: underline; }
           <div class="card-header"><div class="card-title"><i class="fa-solid fa-file-lines"></i> Reporting</div></div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">HTML Report</div><div class="setting-desc">Generate after each run</div></div>
-            <button class="toggle-pill on" onclick="this.classList.toggle('on')"></button>
+            <button class="toggle-pill on" id="toggleHtmlReport" onclick="this.classList.toggle('on')"></button>
           </div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Q&amp;A Report</div><div class="setting-desc">Executive Q&amp;A summary</div></div>
-            <button class="toggle-pill on" onclick="this.classList.toggle('on')"></button>
+            <button class="toggle-pill on" id="toggleQaReport" onclick="this.classList.toggle('on')"></button>
           </div>
           <div class="setting-row">
             <div class="setting-info"><div class="setting-name">Archive History</div><div class="setting-desc">Keep timestamped copies</div></div>
-            <button class="toggle-pill on" onclick="this.classList.toggle('on')"></button>
+            <button class="toggle-pill on" id="toggleArchiveHistory" onclick="this.classList.toggle('on')"></button>
           </div>
         </div>
 
@@ -1397,10 +1406,100 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // Init Theme immediately
-  initTheme();
+  // Settings & Configuration Engine
+  function updateSidebarEnvironment(url) {
+    var urlEl = document.getElementById("envUrlDisplay");
+    var badgeEl = document.getElementById("envBadgeDisplay");
+    if (!url) return;
+    if (urlEl) urlEl.innerText = url;
+    if (badgeEl) {
+      var lower = url.toLowerCase();
+      if (lower.includes("local") || lower.includes("127.0.0.1")) {
+        badgeEl.innerHTML = "&#9679; LOCAL";
+        badgeEl.style.color = "var(--green)";
+        badgeEl.style.background = "rgba(22, 163, 74, 0.12)";
+      } else if (lower.includes("staging") || lower.includes("dev") || lower.includes("test")) {
+        badgeEl.innerHTML = "&#9679; STAGING";
+        badgeEl.style.color = "var(--yellow)";
+        badgeEl.style.background = "rgba(217, 119, 6, 0.12)";
+      } else {
+        badgeEl.innerHTML = "&#9679; REMOTE";
+        badgeEl.style.color = "var(--accent)";
+        badgeEl.style.background = "rgba(37, 99, 235, 0.12)";
+      }
+    }
+  }
 
-  // Init
+  function loadSettings() {
+    fetch("/api/settings")
+      .then(function(res) { return res.json(); })
+      .then(function(d) {
+        if (d.wp_base_url) {
+          var urlInp = document.getElementById("settingBaseUrl");
+          if (urlInp) urlInp.value = d.wp_base_url;
+          updateSidebarEnvironment(d.wp_base_url);
+        }
+        if (d.admin_user) {
+          var userInp = document.getElementById("settingAdminUser");
+          if (userInp) userInp.value = d.admin_user;
+        }
+        if (d.admin_password) {
+          var passInp = document.getElementById("settingAdminPassword");
+          if (passInp) passInp.value = d.admin_password;
+        }
+        if (d.wp_rest_prefix) {
+          var prefixInp = document.getElementById("settingRestPrefix");
+          if (prefixInp) prefixInp.value = d.wp_rest_prefix;
+        }
+        if (d.browser) {
+          var browserSel = document.getElementById("settingBrowser");
+          if (browserSel) browserSel.value = d.browser.toLowerCase();
+        }
+        if (d.explicit_wait) {
+          var waitInp = document.getElementById("settingExplicitWait");
+          if (waitInp) waitInp.value = d.explicit_wait;
+        }
+        if (d.window_size) {
+          var sizeInp = document.getElementById("settingWindowSize");
+          if (sizeInp) sizeInp.value = d.window_size;
+        }
+      }).catch(function(){});
+  }
+
+  window.saveAllSettings = function() {
+    var payload = {
+      wp_base_url: (document.getElementById("settingBaseUrl") || {}).value || "",
+      admin_user: (document.getElementById("settingAdminUser") || {}).value || "",
+      admin_password: (document.getElementById("settingAdminPassword") || {}).value || "",
+      wp_rest_prefix: (document.getElementById("settingRestPrefix") || {}).value || "",
+      browser: (document.getElementById("settingBrowser") || {}).value || "chrome",
+      explicit_wait: (document.getElementById("settingExplicitWait") || {}).value || "15",
+      window_size: (document.getElementById("settingWindowSize") || {}).value || "1440x1000",
+    };
+
+    fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(d) {
+      if (d.status === "ok") {
+        if (d.settings && d.settings.wp_base_url) {
+          updateSidebarEnvironment(d.settings.wp_base_url);
+        }
+        var msg = document.getElementById("saveAllMsg");
+        if (msg) {
+          msg.innerText = "✓ All settings saved successfully";
+          setTimeout(function(){ msg.innerText = ""; }, 3500);
+        }
+      }
+    });
+  };
+
+  // Init Theme & Settings
+  initTheme();
+  loadSettings();
   loadStats();
 });
 </script>

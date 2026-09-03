@@ -40,13 +40,17 @@ class Settings(BaseSettings):
     poll_interval: float = 0.25
 
     def model_post_init(self, __context) -> None:
-        """Allow HEADLESS env-var to override the .env setting at runtime."""
+        """Allow HEADLESS and WP_BASE_URL env-vars to override settings at runtime."""
         import os
         raw = os.environ.get("HEADLESS", "").strip().lower()
         if raw in ("false", "0", "no"):
             object.__setattr__(self, "headless", False)
         elif raw in ("true", "1", "yes"):
             object.__setattr__(self, "headless", True)
+
+        url_override = os.environ.get("WP_BASE_URL", "").strip()
+        if url_override:
+            object.__setattr__(self, "wp_base_url", url_override.rstrip("/"))
 
     # --- Artifacts ---
     screenshot_dir: str = "screenshots"

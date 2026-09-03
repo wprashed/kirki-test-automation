@@ -76,6 +76,23 @@ tests-automation/
 
 ## ⚡ Quick Start Guide
 
+> [!IMPORTANT]
+> **REQUIRED CONFIGURATION BEFORE RUNNING TESTS**  
+> Before launching any automated test suites, you **MUST review and configure these key settings** to match your target WordPress environment:
+> 
+> 1. **Target WordPress Base URL (`WP_BASE_URL`)**: Set your target site address (e.g. `http://tutorlms.local`, `http://localhost`, or your staging domain).
+> 2. **WP Admin Username (`ADMIN_USER`)**: Set your WordPress admin username (default: `admin`).
+> 3. **WP Admin Password (`ADMIN_PASSWORD`)**: Set your WordPress admin password (default: `password`).
+> 4. **Browser Engine (`BROWSER`)**: Select `chrome` (default), `firefox`, or `edge`.
+> 5. **Execution Mode (`HEADLESS`)**: Choose `true` (fast silent background execution) or `false` (live browser watch mode).
+> 
+> **How to Change Configuration Options:**
+> - **Web Studio (UI)**: Open `http://localhost:5001` -> Click **Configuration** in sidebar -> Update any field -> Click **Save All Settings**.
+> - **Environment File (`.env`)**: Edit parameters directly inside `tests-automation/.env`.
+> - **CLI Overrides**: Pass env variables directly (e.g., `WP_BASE_URL="http://staging.local" ADMIN_USER="admin" pytest tests/ -v`).
+
+---
+
 ### 1. Prerequisites & Virtual Environment Setup
 Ensure Python 3.9+ is installed:
 
@@ -112,6 +129,15 @@ Open **`http://localhost:5001`** in your web browser.
 ---
 
 ### 3. Run Pytest via CLI
+
+#### ⚙️ How to Change the Base URL:
+You can configure or dynamically change the target WordPress site URL using any of these 3 methods:
+1. **Web Studio Dashboard**: Go to `http://localhost:5001` -> **Configuration** page -> edit **Base URL** input -> click **Save** (automatically updates `.env` and environment settings).
+2. **Environment Variable CLI Override**:
+   ```bash
+   WP_BASE_URL="http://staging.local" pytest tests/ -v
+   ```
+3. **`.env` Config File**: Edit `WP_BASE_URL=http://tutorlms.local` in `.env` inside `tests-automation/`.
 
 ```bash
 # Run all 231+ test cases across all modules

@@ -83,10 +83,11 @@ def api_run():
         if data.get("parallel", False):
             cmd.extend(["-n", "4"])
 
-        # Propagate headless flag via env so conftest.py / settings pick it up
+        # Propagate headless flag and WP_BASE_URL via env so conftest.py / settings pick it up
         import os as _os
         env = dict(_os.environ)
         env["HEADLESS"] = "false" if not headless else "true"
+        env["WP_BASE_URL"] = get_current_base_url()
 
         try:
             proc = subprocess.Popen(
@@ -211,12 +212,68 @@ def get_real_stats():
 
     shot_count = len(list(SCREENSHOTS_DIR.glob("*.png"))) if SCREENSHOTS_DIR.exists() else 0
 
+def get_current_base_url():
+    return get_all_settings()["wp_base_url"]
+
+
+def get_all_settings():
+    import os
+    env_data = {}
+    env_file = BASE_DIR / ".env"
+    if env_file.exists():
+        for line in env_file.read_text(encoding="utf-8").splitlines():
+            if "=" in line and not line.strip().startswith("#"):
+                k, v = line.split("=", 1)
+                env_data[k.strip()] = v.strip().strip('"').strip("'")
+
     return {
-        "total_available_tests": total_available,
-        "suite_counts": suite_counts,
-        "last_run": last_run,
-        "screenshot_count": shot_count,
+        "wp_base_url": os.environ.get("WP_BASE_URL", env_data.get("WP_BASE_URL", "http://tutorlms.local")).rstrip("/"),
+        "admin_user": os.environ.get("ADMIN_USER", env_data.get("ADMIN_USER", "admin")),
+        "admin_password": os.environ.get("ADMIN_PASSWORD", env_data.get("ADMIN_PASSWORD", "")),
+        "wp_rest_prefix": os.environ.get("WP_REST_PREFIX", env_data.get("WP_REST_PREFIX", "wp-json")),
+        "browser": os.environ.get("BROWSER", env_data.get("BROWSER", "chrome")),
+        "explicit_wait": os.environ.get("EXPLICIT_WAIT", env_data.get("EXPLICIT_WAIT", "15")),
+        "window_size": os.environ.get("WINDOW_SIZE", env_data.get("WINDOW_SIZE", "1440x1000")),
     }
+
+
+@app.route("/api/settings", methods=["GET", "POST"])
+def api_settings():
+    import os
+    if request.method == "POST":
+        data = request.get_json(silent=True) or {}
+        env_file = BASE_DIR / ".env"
+        existing = {}
+        if env_file.exists():
+            for line in env_file.read_text(encoding="utf-8").splitlines():
+                if "=" in line and not line.strip().startswith("#"):
+                    k, v = line.split("=", 1)
+                    existing[k.strip()] = v.strip()
+
+        mapping = {
+            "wp_base_url": "WP_BASE_URL",
+            "admin_user": "ADMIN_USER",
+            "admin_password": "ADMIN_PASSWORD",
+            "wp_rest_prefix": "WP_REST_PREFIX",
+            "browser": "BROWSER",
+            "explicit_wait": "EXPLICIT_WAIT",
+            "window_size": "WINDOW_SIZE",
+        }
+
+        for json_key, env_key in mapping.items():
+            if json_key in data:
+                val = str(data[json_key]).strip()
+                if json_key == "wp_base_url":
+                    val = val.rstrip("/")
+                if val:
+                    os.environ[env_key] = val
+                    existing[env_key] = val
+
+        out_lines = [f"{k}={v}" for k, v in existing.items()]
+        env_file.write_text("\n".join(out_lines) + "\n", encoding="utf-8")
+        return jsonify({"status": "ok", "settings": get_all_settings()})
+
+    return jsonify(get_all_settings())
 
 
 @app.route("/api/stats")

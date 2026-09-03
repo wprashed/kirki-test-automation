@@ -61,6 +61,9 @@ tests-automation/
 ```bash
 source .venv/bin/activate
 
+# Override Target WordPress Base URL dynamically
+WP_BASE_URL="http://staging-site.local" pytest tests/ -v
+
 # Execute full suite (231+ tests)
 pytest tests/ -v --html=reports/latest_report.html --self-contained-html
 
