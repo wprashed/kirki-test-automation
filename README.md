@@ -101,8 +101,10 @@ python3 gui_web.py
 Open **`http://localhost:5001`** in your web browser.
 
 #### Features Available in Web Studio:
-- Select Suite (`Smoke`, `Admin`, `Coupons`, `Security`, `Frontend`, `UI Walkthrough`, or `All 205+ Tests`).
+- Select Suite (`Smoke`, `Admin`, `Coupons`, `Security`, `Frontend`, `UI Walkthrough`, `Visual Diff`, `Core Web Vitals`, `Security DAST`, or `All 231+ Tests`).
+- Toggle **Light / Dark Theme** instantly via topbar button.
 - Toggle **👀 Live Browser Mode** to watch tests execute inside real Chrome window.
+- Toggle **Parallel Execution (`-n 4`)** to run tests concurrently across 4 workers.
 - Real-time terminal output streaming via Server-Sent Events (SSE).
 - Real dynamic stats dashboard (no hardcoded dummy data).
 - View embedded **QA Executive Report**, **Step Screenshots Gallery**, and **Historical Archives**.
@@ -112,15 +114,24 @@ Open **`http://localhost:5001`** in your web browser.
 ### 3. Run Pytest via CLI
 
 ```bash
-# Run all 205+ test cases across all modules
+# Run all 231+ test cases across all modules
 source .venv/bin/activate
 pytest tests/ -v --html=reports/latest_report.html --self-contained-html
+
+# Run with 4 parallel workers
+pytest tests/ -n 4 -v
 
 # Run in Live Browser mode
 HEADLESS=false pytest tests/ -v
 
-# Run only Core Smoke Suite
-pytest tests/smoke/ -v
+# Run Visual Layout Diff Engine
+pytest tests/visual/test_visual_layout_diff_regression.py -v
+
+# Run Core Web Vitals Audit (LCP / CLS)
+pytest tests/performance/test_core_web_vitals_audit.py -v
+
+# Run Security DAST Vulnerability Scanner
+pytest tests/security/test_dast_vulnerability_scanner.py -v
 
 # Run Mobile Responsive Viewport Suite (iPhone 13 emulation)
 pytest tests/frontend/test_mobile_responsive_checkout.py -v
@@ -149,7 +160,7 @@ locust -f locustfile.py --host=http://tutorlms.local
 
 ---
 
-## 📊 205+ Test Suite Breakdown Matrix
+## 📊 231+ Test Suite Breakdown Matrix
 
 | Suite Module / Directory | Description | Test Count | Pass Rate | Status |
 | :--- | :--- | :---: | :---: | :---: |
@@ -158,10 +169,11 @@ locust -f locustfile.py --host=http://tutorlms.local
 | **`tests/coupons/`** | Fixed Cart Discounts, Percentage Discounts, Code Generation, Validation, Activate/Deactivate Actions, Usage Limits, Min Spend Restrictions, Admin SPA Creation Form | 16 | **100%** | **PASSED** |
 | **`tests/frontend/`** | Cart REST API, Account API, Customer Profile, Reviews, Gutenberg Blocks & Shortcodes (`[kirki_*]`), `MergeGuestOrder` Action Hook, Mobile Viewports | 21 | **100%** | **PASSED** |
 | **`tests/orders/`** | Order Lifecycle Creation, Order Activities/Notes, Status Actions, Order Calculations, Refund Processing | 5 | **100%** | **PASSED** |
-| **`tests/security/`** | Unauthenticated REST Rejection, Oversized Payloads, Invalid Coupon Handling, SQL Injection (SQLi), XSS Sanitization, Boundary Checks | 10 | **100%** | **PASSED** |
-| **`tests/ui_walkthrough/`** | Real Human Interactive Mouse Clicks & Keyboard Typing for all Admin SPA and Storefront Checkout forms | 6 | **100%** | **PASSED** |
-| **`tests/visual/`** | Shop Page, Cart Page, and Checkout Page Visual Baseline Pixel Diffing | 3 | **100%** | **PASSED** |
-| **TOTAL** | **Full Framework & Codebase Coverage Across All Plugin Routes** | **205+** | **100%** | **PASSED** |
+| **`tests/security/`** | Auth Boundaries, Oversized Payloads, SQLi Fuzzing, Stored XSS Sanitization, Security Headers, DAST Vulnerability Scanner | 14 | **100%** | **PASSED** |
+| **`tests/performance/`** | Multi-User Concurrent Stress Suite (50-100 Parallel Users) & Core Web Vitals Navigation Timing Audit (LCP / CLS) | 5 | **100%** | **PASSED** |
+| **`tests/visual/`** | Pixel-by-Pixel Layout Diff Regression Engine & Visual Baseline Pixel Diffing | 7 | **100%** | **PASSED** |
+| **`tests/ui_walkthrough/`** | Real Human Interactive Mouse Clicks & Keyboard Typing for all Admin SPA and Storefront Checkout forms | 17 | **100%** | **PASSED** |
+| **TOTAL** | **Full Framework & Codebase Coverage Across All Plugin Routes & Advanced Suites** | **231+** | **100%** | **PASSED** |
 
 ---
 
